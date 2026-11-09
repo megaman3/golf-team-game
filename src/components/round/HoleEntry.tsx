@@ -5,6 +5,7 @@ import { decrementStroke, incrementStroke, setCurrentHole, setPlayerStroke } fro
 import { computeHandicapStrokes } from '../../engine/handicap';
 import { computeRoundResult } from '../../engine/roundResult';
 import type { HolePointsResult, RoundTotals } from '../../engine/formats/types';
+import { getGameFormat } from '../../engine/formats/registry';
 import { completeRound } from '../../storage/roundRepository';
 import './HoleEntry.css';
 
@@ -37,6 +38,7 @@ export function HoleEntry() {
     return <p>Kunde inte hitta bana/tee för den pågående rundan.</p>;
   }
 
+  const format = getGameFormat(round.formatId);
   const currentHole = round.currentHole ?? 1;
   const holeArrayIndex = currentHole - 1;
   const par = course.par[holeArrayIndex];
@@ -70,7 +72,7 @@ export function HoleEntry() {
   return (
     <div className="hole-entry">
       <p className="hole-entry__course">
-        {course.club} – {course.name} ({tee.label})
+        {course.club} – {course.name} ({tee.label}) · {format.label}
       </p>
       <div className="hole-entry__nav">
         <button type="button" disabled={currentHole <= 1} onClick={() => goToHole(currentHole - 1)}>
