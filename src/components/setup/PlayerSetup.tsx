@@ -1,0 +1,62 @@
+import type { TeamId } from '../../domain/types';
+
+export interface DraftPlayer {
+  name: string;
+  handicap: string;
+  team: TeamId;
+}
+
+interface PlayerSetupProps {
+  playerCount: number;
+  usesTeams: boolean;
+  players: DraftPlayer[];
+  rosterNames: string[];
+  onChange: (players: DraftPlayer[]) => void;
+}
+
+export function PlayerSetup({ playerCount, usesTeams, players, rosterNames, onChange }: PlayerSetupProps) {
+  function updatePlayer(index: number, patch: Partial<DraftPlayer>) {
+    onChange(players.map((player, i) => (i === index ? { ...player, ...patch } : player)));
+  }
+
+  return (
+    <fieldset className="player-setup">
+      <legend>Spelare</legend>
+      <datalist id="player-roster">
+        {rosterNames.map((name) => (
+          <option key={name} value={name} />
+        ))}
+      </datalist>
+      {Array.from({ length: playerCount }, (_, index) => {
+        const player = players[index];
+        return (
+          <div className="player-setup__row" key={index}>
+            <input
+              type="text"
+              list="player-roster"
+              placeholder={`Spelare ${index + 1}`}
+              value={player.name}
+              onChange={(e) => updatePlayer(index, { name: e.target.value })}
+            />
+            <input
+              type="number"
+              step="0.1"
+              placeholder="Hcp"
+              value={player.handicap}
+              onChange={(e) => updatePlayer(index, { handicap: e.target.value })}
+            />
+            {usesTeams && (
+              <select
+                value={player.team}
+                onChange={(e) => updatePlayer(index, { team: e.target.value as TeamId })}
+              >
+                <option value="A">Lag A</option>
+                <option value="B">Lag B</option>
+              </select>
+            )}
+          </div>
+        );
+      })}
+    </fieldset>
+  );
+}

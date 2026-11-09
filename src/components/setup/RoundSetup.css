@@ -1,0 +1,92 @@
+.round-setup {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 480px;
+}
+
+.round-setup__error {
+  color: #b3261e;
+  font-weight: 600;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+  color: var(--color-text-muted);
+}
+
+.field select,
+.field input[type='text'],
+.field input[type='number'] {
+  font-size: 16px;
+  padding: 10px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.field--checkbox {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+.player-setup,
+.format-settings {
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.player-setup legend,
+.format-settings legend {
+  color: var(--color-text-muted);
+  padding: 0 4px;
+}
+
+.player-setup__row {
+  display: flex;
+  gap: 8px;
+}
+
+.player-setup__row input[type='text'] {
+  flex: 2;
+  min-width: 0;
+}
+
+.player-setup__row input[type='number'] {
+  flex: 1;
+  min-width: 0;
+}
+
+.player-setup__row select {
+  flex: 1;
+}
+
+.player-setup__row input,
+.player-setup__row select {
+  font-size: 16px;
+  padding: 10px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.round-setup__start {
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  background: var(--color-primary);
+  color: var(--color-primary-contrast);
+  cursor: pointer;
+}
