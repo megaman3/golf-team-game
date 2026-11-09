@@ -1,6 +1,10 @@
 import type { RoundPlayer, TeamId } from '../../domain/types';
 import type { RoundTotals } from '../../engine/formats/types';
 
+export function formatRoundDate(iso: string): string {
+  return new Date(iso).toLocaleDateString('sv-SE', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+
 export function teamLabel(players: RoundPlayer[], team: TeamId): string {
   const names = players.filter((p) => p.teamId === team).map((p) => p.name);
   return names.length > 0 ? `Lag ${team} (${names.join(' & ')})` : `Lag ${team}`;

@@ -5,6 +5,8 @@ import { RoundSetup } from './components/setup/RoundSetup';
 import { HoleEntry } from './components/round/HoleEntry';
 import { Scorecard } from './components/round/Scorecard';
 import { RoundSaved } from './components/round/RoundSaved';
+import { HistoryList } from './components/history/HistoryList';
+import { HistoryDetail } from './components/history/HistoryDetail';
 import { useStorage } from './StorageContext';
 
 function TabPlaceholder({ title }: { title: string }) {
@@ -36,6 +38,16 @@ function RundaTab() {
   return <RoundSetup />;
 }
 
+function HistorikTab() {
+  const [openRoundId, setOpenRoundId] = useState<string | null>(null);
+
+  if (openRoundId) {
+    return <HistoryDetail roundId={openRoundId} onBack={() => setOpenRoundId(null)} />;
+  }
+
+  return <HistoryList onOpenRound={setOpenRoundId} />;
+}
+
 function App() {
   const [activeTab, setActiveTab] = useState<TabId>('runda');
 
@@ -43,7 +55,7 @@ function App() {
     <div className="app-shell">
       <main className="app-shell__content">
         {activeTab === 'runda' && <RundaTab />}
-        {activeTab === 'historik' && <TabPlaceholder title="Historik" />}
+        {activeTab === 'historik' && <HistorikTab />}
         {activeTab === 'total' && <TabPlaceholder title="Total" />}
         {activeTab === 'installningar' && <TabPlaceholder title="Inställningar" />}
       </main>
