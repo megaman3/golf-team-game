@@ -7,6 +7,7 @@ import { Scorecard } from './components/round/Scorecard';
 import { RoundSaved } from './components/round/RoundSaved';
 import { HistoryList } from './components/history/HistoryList';
 import { HistoryDetail } from './components/history/HistoryDetail';
+import { TotalsView } from './components/totals/TotalsView';
 import { useStorage } from './StorageContext';
 
 function TabPlaceholder({ title }: { title: string }) {
@@ -56,7 +57,7 @@ function App() {
       <main className="app-shell__content">
         {activeTab === 'runda' && <RundaTab />}
         {activeTab === 'historik' && <HistorikTab />}
-        {activeTab === 'total' && <TabPlaceholder title="Total" />}
+        {activeTab === 'total' && <TotalsView />}
         {activeTab === 'installningar' && <TabPlaceholder title="Inställningar" />}
       </main>
       <TabBar active={activeTab} onChange={setActiveTab} />

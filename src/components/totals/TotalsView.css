@@ -1,0 +1,88 @@
+.totals-view {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.totals-view__filters {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.totals-view__filters .field select,
+.totals-view__filters .field input {
+  font-size: 14px;
+  padding: 8px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.totals-view__date-range {
+  display: flex;
+  gap: 8px;
+}
+
+.totals-view__date-range .field {
+  flex: 1;
+}
+
+.totals-view__shortcuts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.totals-view__shortcuts button {
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.totals-view__toggle {
+  display: flex;
+  gap: 8px;
+}
+
+.totals-view__toggle-btn {
+  flex: 1;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  border-radius: 8px;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.totals-view__toggle-btn--active {
+  color: var(--color-primary-contrast);
+  background: var(--color-primary);
+  font-weight: 600;
+}
+
+.totals-view__empty {
+  color: var(--color-text-muted);
+}
+
+.totals-view__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.totals-view__table th,
+.totals-view__table td {
+  border: 1px solid var(--color-border);
+  padding: 8px;
+  text-align: left;
+}
+
+.totals-view__table thead th {
+  background: var(--color-surface);
+}
