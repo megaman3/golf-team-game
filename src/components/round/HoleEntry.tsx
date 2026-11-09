@@ -23,6 +23,22 @@ function describeWinner(players: RoundPlayer[], winner: TeamId | 'tie'): string 
   return winner === 'tie' ? 'delat' : teamLabel(players, winner);
 }
 
+function describeRoundResult(totals: RoundTotals, players: RoundPlayer[]): string {
+  if (!totals.pointsByTeam || !totals.winnerTeamIds) {
+    return 'Rundan är klar.';
+  }
+  const { A, B } = totals.pointsByTeam;
+  if (totals.winnerTeamIds.length > 1) {
+    return `Oavgjort, ${A}–${B} poäng.`;
+  }
+  const winner = totals.winnerTeamIds[0];
+  if (winner === 'tie') {
+    return 'Rundan är klar.';
+  }
+  const loser: TeamId = winner === 'A' ? 'B' : 'A';
+  return `${teamLabel(players, winner)} vann med ${totals.pointsByTeam[winner]}–${totals.pointsByTeam[loser]} poäng.`;
+}
+
 interface HoleEntryProps {
   onShowScorecard: () => void;
 }
@@ -66,12 +82,16 @@ export function HoleEntry({ onShowScorecard }: HoleEntryProps) {
     });
   }
 
-  function handleFinish() {
+  const handleFinish = () => {
+    const resultText = describeRoundResult(result.totals, round.players);
+    const confirmed = window.confirm(`${resultText}\n\nSpara rundan till historiken och starta en ny runda?`);
+    if (!confirmed) return;
+
     update((current) => {
       if (!current.inProgressRound) return current;
       return completeRound(current, current.inProgressRound);
     });
-  }
+  };
 
   return (
     <div className="hole-entry">
@@ -147,9 +167,12 @@ export function HoleEntry({ onShowScorecard }: HoleEntryProps) {
       <RoundStandings totals={result.totals} players={round.players} />
 
       {allComplete && (
-        <button type="button" className="hole-entry__finish" onClick={handleFinish}>
-          Spara till historik och starta ny runda
-        </button>
+        <div className="hole-entry__finish-area">
+          <p className="hole-entry__final-result">{describeRoundResult(result.totals, round.players)}</p>
+          <button type="button" className="hole-entry__finish" onClick={handleFinish}>
+            Spara till historik och starta ny runda
+          </button>
+        </div>
       )}
     </div>
   );
