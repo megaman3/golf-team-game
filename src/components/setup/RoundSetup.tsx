@@ -13,16 +13,18 @@ import { saveInProgressRound } from '../../storage/roundRepository';
 import { CourseSelect } from './CourseSelect';
 import { PlayerSetup, type DraftPlayer } from './PlayerSetup';
 import { FormatSettingsForm } from './FormatSettingsForm';
+import { pickDefaultTeeId } from './defaultTee';
 import './RoundSetup.css';
 
 const FORMAT_ID = bestBallWorstBall.id;
+const DEFAULT_HANDICAP = '10';
 
 function emptyDraftPlayers(defaultTeeId: string): DraftPlayer[] {
   return [
-    { name: '', handicap: '', team: 'A', teeId: defaultTeeId },
-    { name: '', handicap: '', team: 'A', teeId: defaultTeeId },
-    { name: '', handicap: '', team: 'B', teeId: defaultTeeId },
-    { name: '', handicap: '', team: 'B', teeId: defaultTeeId },
+    { name: '', handicap: DEFAULT_HANDICAP, team: 'A', teeId: defaultTeeId },
+    { name: '', handicap: DEFAULT_HANDICAP, team: 'A', teeId: defaultTeeId },
+    { name: '', handicap: DEFAULT_HANDICAP, team: 'B', teeId: defaultTeeId },
+    { name: '', handicap: DEFAULT_HANDICAP, team: 'B', teeId: defaultTeeId },
   ];
 }
 
@@ -35,7 +37,7 @@ export function RoundSetup() {
     [storage.courses, courseId],
   );
   const [scratch, setScratch] = useState(false);
-  const [players, setPlayers] = useState<DraftPlayer[]>(() => emptyDraftPlayers(course?.tees[0]?.id ?? ''));
+  const [players, setPlayers] = useState<DraftPlayer[]>(() => emptyDraftPlayers(pickDefaultTeeId(course?.tees ?? [])));
   const [settings, setSettings] = useState<BestBallWorstBallSettings>(
     () => getFormatSettings<BestBallWorstBallSettings>(storage, FORMAT_ID) ?? defaultBestBallWorstBallSettings,
   );
@@ -44,7 +46,7 @@ export function RoundSetup() {
   function handleCourseChange(nextCourseId: string) {
     setCourseId(nextCourseId);
     const nextCourse = storage.courses.find((c) => c.id === nextCourseId) ?? null;
-    const defaultTeeId = nextCourse?.tees[0]?.id ?? '';
+    const defaultTeeId = pickDefaultTeeId(nextCourse?.tees ?? []);
     setPlayers((current) => current.map((player) => ({ ...player, teeId: defaultTeeId })));
   }
 
