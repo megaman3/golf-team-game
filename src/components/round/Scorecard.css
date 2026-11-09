@@ -1,0 +1,77 @@
+.scorecard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.scorecard__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.scorecard__header button {
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.scorecard__hint {
+  margin: 0;
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.scorecard__scroll {
+  overflow-x: auto;
+}
+
+.scorecard__table {
+  border-collapse: collapse;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.scorecard__table th,
+.scorecard__table td {
+  border: 1px solid var(--color-border);
+  padding: 4px 6px;
+  text-align: center;
+}
+
+.scorecard__table thead th {
+  background: var(--color-surface);
+}
+
+.scorecard__table tbody th {
+  text-align: left;
+  position: sticky;
+  left: 0;
+  background: var(--color-bg);
+}
+
+.scorecard__summary-col {
+  font-weight: 700;
+  background: var(--color-surface);
+}
+
+.scorecard__hole-button {
+  border: none;
+  background: transparent;
+  color: var(--color-primary);
+  font-weight: 600;
+  cursor: pointer;
+  padding: 2px 4px;
+}
+
+.scorecard__index-input {
+  width: 36px;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  text-align: center;
+  font-size: 13px;
+}

@@ -23,7 +23,11 @@ function describeWinner(players: RoundPlayer[], winner: TeamId | 'tie'): string 
   return winner === 'tie' ? 'delat' : teamLabel(players, winner);
 }
 
-export function HoleEntry() {
+interface HoleEntryProps {
+  onShowScorecard: () => void;
+}
+
+export function HoleEntry({ onShowScorecard }: HoleEntryProps) {
   const { storage, update } = useStorage();
   const round = storage.inProgressRound;
   const course = round ? storage.courses.find((c) => c.id === round.courseId) : undefined;
@@ -71,9 +75,14 @@ export function HoleEntry() {
 
   return (
     <div className="hole-entry">
-      <p className="hole-entry__course">
-        {course.club} – {course.name} ({tee.label}) · {format.label}
-      </p>
+      <div className="hole-entry__top">
+        <p className="hole-entry__course">
+          {course.club} – {course.name} ({tee.label}) · {format.label}
+        </p>
+        <button type="button" className="hole-entry__scorecard-link" onClick={onShowScorecard}>
+          Scorekort
+        </button>
+      </div>
       <div className="hole-entry__nav">
         <button type="button" disabled={currentHole <= 1} onClick={() => goToHole(currentHole - 1)}>
           ←

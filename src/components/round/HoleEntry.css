@@ -5,11 +5,28 @@
   max-width: 480px;
 }
 
+.hole-entry__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
 .hole-entry__course {
   margin: 0;
-  text-align: center;
   font-weight: 600;
   color: var(--color-text-muted);
+}
+
+.hole-entry__scorecard-link {
+  flex-shrink: 0;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 13px;
+  cursor: pointer;
 }
 
 .hole-entry__nav {

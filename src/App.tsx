@@ -3,6 +3,7 @@ import './App.css';
 import { TabBar, type TabId } from './components/layout/TabBar';
 import { RoundSetup } from './components/setup/RoundSetup';
 import { HoleEntry } from './components/round/HoleEntry';
+import { Scorecard } from './components/round/Scorecard';
 import { useStorage } from './StorageContext';
 
 function TabPlaceholder({ title }: { title: string }) {
@@ -16,10 +17,17 @@ function TabPlaceholder({ title }: { title: string }) {
 
 function RundaTab() {
   const { storage } = useStorage();
-  if (storage.inProgressRound) {
-    return <HoleEntry />;
+  const [view, setView] = useState<'entry' | 'scorecard'>('entry');
+
+  if (!storage.inProgressRound) {
+    return <RoundSetup />;
   }
-  return <RoundSetup />;
+
+  if (view === 'scorecard') {
+    return <Scorecard onSelectHole={() => setView('entry')} />;
+  }
+
+  return <HoleEntry onShowScorecard={() => setView('scorecard')} />;
 }
 
 function App() {
