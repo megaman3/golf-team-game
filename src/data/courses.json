@@ -7,10 +7,10 @@
     "par": [4, 4, 4, 3, 5, 4, 4, 3, 5, 4, 4, 5, 4, 4, 3, 5, 4, 4],
     "index": [3, 17, 11, 7, 15, 5, 1, 13, 9, 8, 4, 18, 12, 6, 14, 16, 2, 10],
     "tees": [
-      { "id": "blue", "label": "Blå", "lengthMeters": 5586 },
-      { "id": "red", "label": "Röd", "lengthMeters": 5170 },
-      { "id": "white", "label": "Vit", "lengthMeters": 6482 },
-      { "id": "yellow", "label": "Gul", "lengthMeters": 6077 }
+      { "id": "blue", "label": "Blå", "lengthMeters": 5586, "slope": 126, "courseRating": 70.0 },
+      { "id": "red", "label": "Röd", "lengthMeters": 5170, "slope": 122, "courseRating": 67.9 },
+      { "id": "white", "label": "Vit", "lengthMeters": 6482, "slope": 135, "courseRating": 74.4 },
+      { "id": "yellow", "label": "Gul", "lengthMeters": 6077, "slope": 131, "courseRating": 72.4 }
     ]
   },
   {
@@ -21,10 +21,10 @@
     "par": [4, 4, 3, 5, 4, 3, 4, 5, 4, 4, 4, 4, 3, 4, 3, 5, 4, 4],
     "index": [11, 7, 17, 9, 3, 13, 1, 15, 5, 14, 6, 10, 16, 2, 18, 12, 4, 8],
     "tees": [
-      { "id": "blue", "label": "Blå", "lengthMeters": 5269 },
-      { "id": "red", "label": "Röd", "lengthMeters": 4760 },
-      { "id": "white", "label": "Vit", "lengthMeters": 5846 },
-      { "id": "yellow", "label": "Gul", "lengthMeters": 5542 }
+      { "id": "blue", "label": "Blå", "lengthMeters": 5269, "slope": 112, "courseRating": 68.6 },
+      { "id": "red", "label": "Röd", "lengthMeters": 4760, "slope": 107, "courseRating": 66.1 },
+      { "id": "white", "label": "Vit", "lengthMeters": 5846, "slope": 118, "courseRating": 71.5 },
+      { "id": "yellow", "label": "Gul", "lengthMeters": 5542, "slope": 115, "courseRating": 70.0 }
     ]
   },
   {
@@ -35,12 +35,12 @@
     "par": [4, 5, 4, 4, 3, 4, 3, 5, 4, 4, 5, 4, 3, 4, 5, 4, 3, 4],
     "index": [16, 6, 14, 8, 18, 2, 4, 10, 12, 7, 3, 11, 13, 1, 15, 17, 5, 9],
     "tees": [
-      { "id": "68", "label": "68", "lengthMeters": 6835 },
-      { "id": "65", "label": "65", "lengthMeters": 6530 },
-      { "id": "61", "label": "61", "lengthMeters": 6150 },
-      { "id": "58", "label": "58", "lengthMeters": 5790 },
-      { "id": "53", "label": "53", "lengthMeters": 5332 },
-      { "id": "49", "label": "49", "lengthMeters": 4855 }
+      { "id": "68", "label": "68", "lengthMeters": 6835, "slope": 150, "courseRating": 77.8 },
+      { "id": "65", "label": "65", "lengthMeters": 6530, "slope": 145, "courseRating": 76.1 },
+      { "id": "61", "label": "61", "lengthMeters": 6150, "slope": 142, "courseRating": 74.0 },
+      { "id": "58", "label": "58", "lengthMeters": 5790, "slope": 136, "courseRating": 72.3 },
+      { "id": "53", "label": "53", "lengthMeters": 5332, "slope": 126, "courseRating": 70.2 },
+      { "id": "49", "label": "49", "lengthMeters": 4855, "slope": 121, "courseRating": 67.5 }
     ]
   },
   {
@@ -51,13 +51,13 @@
     "par": [5, 4, 4, 3, 4, 3, 4, 5, 4, 4, 5, 4, 4, 4, 3, 4, 3, 5],
     "index": [11, 7, 13, 5, 15, 17, 3, 9, 1, 12, 4, 16, 6, 18, 10, 2, 8, 14],
     "tees": [
-      { "id": "68", "label": "68", "lengthMeters": 6781 },
-      { "id": "65", "label": "65", "lengthMeters": 6519 },
-      { "id": "62", "label": "62", "lengthMeters": 6181 },
-      { "id": "59", "label": "59", "lengthMeters": 5856 },
-      { "id": "54", "label": "54", "lengthMeters": 5364 },
-      { "id": "51", "label": "51", "lengthMeters": 5059 },
-      { "id": "48", "label": "48", "lengthMeters": 4840 }
+      { "id": "68", "label": "68", "lengthMeters": 6781, "slope": 146, "courseRating": 76.8 },
+      { "id": "65", "label": "65", "lengthMeters": 6519, "slope": 139, "courseRating": 75.4 },
+      { "id": "62", "label": "62", "lengthMeters": 6181, "slope": 129, "courseRating": 73.6 },
+      { "id": "59", "label": "59", "lengthMeters": 5856, "slope": 131, "courseRating": 71.7 },
+      { "id": "54", "label": "54", "lengthMeters": 5364, "slope": 125, "courseRating": 69.0 },
+      { "id": "51", "label": "51", "lengthMeters": 5059, "slope": 119, "courseRating": 67.6 },
+      { "id": "48", "label": "48", "lengthMeters": 4840, "slope": 113, "courseRating": 66.2 }
     ]
   }
 ]

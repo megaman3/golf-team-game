@@ -42,4 +42,19 @@ describe('seed courses', () => {
     const lakes = seedCourses.find((c) => c.id === 'the-national-lakes')!;
     expect(lakes.tees.map((t) => t.id).sort()).toEqual(['48', '51', '54', '59', '62', '65', '68']);
   });
+
+  it('every tee has a plausible slope (55-155) and course rating (50-90) when set', () => {
+    for (const course of seedCourses) {
+      for (const tee of course.tees) {
+        if (tee.slope != null) {
+          expect(tee.slope).toBeGreaterThanOrEqual(55);
+          expect(tee.slope).toBeLessThanOrEqual(155);
+        }
+        if (tee.courseRating != null) {
+          expect(tee.courseRating).toBeGreaterThan(50);
+          expect(tee.courseRating).toBeLessThan(90);
+        }
+      }
+    }
+  });
 });
