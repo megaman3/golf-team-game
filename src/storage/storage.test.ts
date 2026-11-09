@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { createDefaultStorage, SCHEMA_VERSION } from './schema';
 import { loadStorage, saveStorage, type StorageLike } from './storage';
+import { seedCourses } from '../data/courses';
 
 function createMemoryStorage(): StorageLike {
   const data = new Map<string, string>();
@@ -49,6 +50,29 @@ describe('loadStorage', () => {
 
     const storage = loadStorage(backend);
     expect(storage).toEqual(createDefaultStorage());
+  });
+
+  it('adds newly shipped seed courses to an older save without touching already-saved ones', () => {
+    const backend = createMemoryStorage();
+    const editedOcean = { ...seedCourses[0], index: [...seedCourses[0].index].reverse() };
+    backend.setItem(
+      'golf-team-game:v1',
+      JSON.stringify({
+        schemaVersion: SCHEMA_VERSION,
+        courses: [editedOcean],
+        players: [],
+        formatSettings: {},
+        roundsHistory: [],
+        inProgressRound: null,
+      }),
+    );
+
+    const storage = loadStorage(backend);
+
+    const ocean = storage.courses.find((c) => c.id === editedOcean.id);
+    expect(ocean?.index).toEqual(editedOcean.index);
+    expect(storage.courses.map((c) => c.id)).toEqual(expect.arrayContaining(seedCourses.map((c) => c.id)));
+    expect(storage.courses).toHaveLength(seedCourses.length);
   });
 
   it('fills in missing fields with defaults when the saved shape is partial', () => {
