@@ -1,4 +1,7 @@
-export type TeeId = 'blue' | 'red' | 'white' | 'yellow';
+// A free-form id (not a fixed color union): different clubs use different
+// tee sets, e.g. The National's Links course has no red tee but does have
+// a green one, and its Lakes course adds an orange tee.
+export type TeeId = string;
 
 export interface Tee {
   id: TeeId;

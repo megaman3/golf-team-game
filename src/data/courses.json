@@ -26,5 +26,34 @@
       { "id": "white", "label": "Vit", "lengthMeters": 5846 },
       { "id": "yellow", "label": "Gul", "lengthMeters": 5542 }
     ]
+  },
+  {
+    "id": "the-national-links",
+    "club": "The National Golfresort",
+    "name": "Links Course",
+    "holes": 18,
+    "par": [4, 5, 4, 4, 3, 4, 3, 5, 4, 4, 5, 4, 3, 4, 5, 4, 3, 4],
+    "index": [16, 6, 14, 8, 18, 2, 4, 10, 12, 7, 3, 11, 13, 1, 15, 17, 5, 9],
+    "tees": [
+      { "id": "yellow", "label": "Gul", "lengthMeters": 6835 },
+      { "id": "white", "label": "Vit", "lengthMeters": 6530 },
+      { "id": "green", "label": "Grön", "lengthMeters": 6150 },
+      { "id": "blue", "label": "Blå", "lengthMeters": 5790 }
+    ]
+  },
+  {
+    "id": "the-national-lakes",
+    "club": "The National Golfresort",
+    "name": "Lakes Course",
+    "holes": 18,
+    "par": [5, 4, 4, 3, 4, 3, 4, 5, 4, 4, 5, 4, 4, 4, 3, 4, 3, 5],
+    "index": [11, 7, 13, 5, 15, 17, 3, 9, 1, 12, 4, 16, 6, 18, 10, 2, 8, 14],
+    "tees": [
+      { "id": "yellow", "label": "Gul", "lengthMeters": 6791 },
+      { "id": "white", "label": "Vit", "lengthMeters": 6519 },
+      { "id": "blue", "label": "Blå", "lengthMeters": 6111 },
+      { "id": "red", "label": "Röd", "lengthMeters": 5856 },
+      { "id": "orange", "label": "Orange", "lengthMeters": 5364 }
+    ]
   }
 ]
