@@ -1,4 +1,4 @@
-import type { Course, Round, Tee } from '../domain/types';
+import type { Course, Round } from '../domain/types';
 import { computeHandicapStrokes } from './handicap';
 import { getGameFormat } from './formats/registry';
 import type { HolePointsResult, HoleStrokeInput, RoundTotals } from './formats/types';
@@ -8,10 +8,11 @@ export interface RoundResult {
   totals: RoundTotals;
 }
 
-export function computeRoundResult(round: Round, course: Course, tee: Tee): RoundResult {
+export function computeRoundResult(round: Round, course: Course): RoundResult {
   const format = getGameFormat(round.formatId);
   const settings = round.settings ?? format.defaultSettings;
   const coursePar = course.par.reduce((sum, par) => sum + par, 0);
+  const teeById = new Map(course.tees.map((tee) => [tee.id, tee]));
 
   const holeResults = course.par.map((par, i) => {
     const hole = i + 1;
@@ -24,7 +25,7 @@ export function computeRoundResult(round: Round, course: Course, tee: Tee): Roun
       strokesByPlayer[player.playerId] = holeScore?.strokesByPlayer[player.playerId] ?? null;
       handicapStrokesByPlayer[player.playerId] = computeHandicapStrokes({
         exactHandicap: round.scratch ? null : player.exactHandicapUsed,
-        tee,
+        tee: teeById.get(player.teeId) ?? {},
         coursePar,
         holeIndex: index,
         holesCount: course.holes,

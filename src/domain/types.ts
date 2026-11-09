@@ -37,6 +37,10 @@ export interface RoundPlayer {
   // null means this player plays scratch (no handicap strokes) this round.
   exactHandicapUsed: number | null;
   teamId?: TeamId;
+  // Each player picks their own tee at round setup; it doesn't change hole
+  // to hole. There is deliberately no round-level teeId - players in the
+  // same round can play from different tees.
+  teeId: TeeId;
 }
 
 export interface HoleScore {
@@ -51,7 +55,6 @@ export type RoundStatus = 'in_progress' | 'completed';
 export interface Round {
   id: string;
   courseId: string;
-  teeId: TeeId;
   formatId: string;
   scratch: boolean;
   players: RoundPlayer[];

@@ -9,7 +9,6 @@ describe('export/import round-trip', () => {
     storage.roundsHistory.push({
       id: 'r1',
       courseId: 'barseback-ocean',
-      teeId: 'white',
       formatId: 'bestBallWorstBall',
       scratch: false,
       players: [],

@@ -6,7 +6,6 @@ function baseRound(): Round {
   return {
     id: 'r1',
     courseId: 'c1',
-    teeId: 'white',
     formatId: 'bestBallWorstBall',
     scratch: false,
     players: [],

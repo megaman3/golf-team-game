@@ -11,19 +11,18 @@ import { getFormatSettings, setFormatSettings } from '../../storage/settingsRepo
 import { upsertPlayer } from '../../storage/playerRepository';
 import { saveInProgressRound } from '../../storage/roundRepository';
 import { CourseSelect } from './CourseSelect';
-import { TeeSelect } from './TeeSelect';
 import { PlayerSetup, type DraftPlayer } from './PlayerSetup';
 import { FormatSettingsForm } from './FormatSettingsForm';
 import './RoundSetup.css';
 
 const FORMAT_ID = bestBallWorstBall.id;
 
-function emptyDraftPlayers(): DraftPlayer[] {
+function emptyDraftPlayers(defaultTeeId: string): DraftPlayer[] {
   return [
-    { name: '', handicap: '', team: 'A' },
-    { name: '', handicap: '', team: 'A' },
-    { name: '', handicap: '', team: 'B' },
-    { name: '', handicap: '', team: 'B' },
+    { name: '', handicap: '', team: 'A', teeId: defaultTeeId },
+    { name: '', handicap: '', team: 'A', teeId: defaultTeeId },
+    { name: '', handicap: '', team: 'B', teeId: defaultTeeId },
+    { name: '', handicap: '', team: 'B', teeId: defaultTeeId },
   ];
 }
 
@@ -35,20 +34,18 @@ export function RoundSetup() {
     () => storage.courses.find((c) => c.id === courseId) ?? null,
     [storage.courses, courseId],
   );
-  const [teeId, setTeeId] = useState<string | null>(course?.tees[0]?.id ?? null);
   const [scratch, setScratch] = useState(false);
-  const [players, setPlayers] = useState<DraftPlayer[]>(emptyDraftPlayers());
+  const [players, setPlayers] = useState<DraftPlayer[]>(() => emptyDraftPlayers(course?.tees[0]?.id ?? ''));
   const [settings, setSettings] = useState<BestBallWorstBallSettings>(
     () => getFormatSettings<BestBallWorstBallSettings>(storage, FORMAT_ID) ?? defaultBestBallWorstBallSettings,
   );
   const [error, setError] = useState<string | null>(null);
 
-  const tee = course?.tees.find((t) => t.id === teeId) ?? null;
-
   function handleCourseChange(nextCourseId: string) {
     setCourseId(nextCourseId);
     const nextCourse = storage.courses.find((c) => c.id === nextCourseId) ?? null;
-    setTeeId(nextCourse?.tees[0]?.id ?? null);
+    const defaultTeeId = nextCourse?.tees[0]?.id ?? '';
+    setPlayers((current) => current.map((player) => ({ ...player, teeId: defaultTeeId })));
   }
 
   function resolvePlayerId(name: string): string {
@@ -58,12 +55,16 @@ export function RoundSetup() {
   }
 
   function handleStart() {
-    if (!course || !tee) {
-      setError('Välj bana och tee.');
+    if (!course) {
+      setError('Välj bana.');
       return;
     }
     if (players.some((p) => p.name.trim() === '')) {
       setError('Alla spelare måste ha ett namn.');
+      return;
+    }
+    if (players.some((p) => !p.teeId)) {
+      setError('Alla spelare måste ha en tee.');
       return;
     }
     if (!scratch && players.some((p) => p.handicap.trim() === '' || Number.isNaN(Number(p.handicap)))) {
@@ -76,6 +77,7 @@ export function RoundSetup() {
       name: draft.name.trim(),
       exactHandicapUsed: scratch ? null : Number(draft.handicap),
       teamId: draft.team,
+      teeId: draft.teeId,
     }));
 
     const holeScores: HoleScore[] = Array.from({ length: course.holes }, (_, i) => ({
@@ -86,7 +88,6 @@ export function RoundSetup() {
     const round: Round = {
       id: createId(),
       courseId: course.id,
-      teeId: tee.id,
       formatId: FORMAT_ID,
       scratch,
       players: roundPlayers,
@@ -119,7 +120,6 @@ export function RoundSetup() {
       {error && <p className="round-setup__error">{error}</p>}
 
       <CourseSelect courses={storage.courses} value={courseId} onChange={handleCourseChange} />
-      <TeeSelect tees={course?.tees ?? []} value={teeId} onChange={setTeeId} />
 
       <label className="field field--checkbox">
         <input type="checkbox" checked={scratch} onChange={(e) => setScratch(e.target.checked)} />
@@ -131,6 +131,7 @@ export function RoundSetup() {
         usesTeams={bestBallWorstBall.usesTeams}
         players={players}
         rosterNames={storage.players.map((p) => p.name)}
+        tees={course?.tees ?? []}
         onChange={setPlayers}
       />
 

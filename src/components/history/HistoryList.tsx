@@ -19,19 +19,14 @@ export function HistoryList({ onOpenRound }: HistoryListProps) {
     <ul className="history-list">
       {storage.roundsHistory.map((round) => {
         const course = storage.courses.find((c) => c.id === round.courseId);
-        const tee = course?.tees.find((t) => t.id === round.teeId);
         const format = getGameFormat(round.formatId);
-        const resultText =
-          course && tee ? describeRoundResult(computeRoundResult(round, course, tee).totals, round.players) : '';
+        const resultText = course ? describeRoundResult(computeRoundResult(round, course).totals, round.players) : '';
 
         return (
           <li key={round.id} className="history-list__item">
             <button type="button" className="history-list__open" onClick={() => onOpenRound(round.id)}>
               <span className="history-list__date">{formatRoundDate(round.completedAt ?? round.startedAt)}</span>
-              <span className="history-list__course">
-                {course ? `${course.club} – ${course.name}` : 'Okänd bana'}
-                {tee ? ` (${tee.label})` : ''}
-              </span>
+              <span className="history-list__course">{course ? `${course.club} – ${course.name}` : 'Okänd bana'}</span>
               <span className="history-list__format">{format.label}</span>
               {resultText && <span className="history-list__result">{resultText}</span>}
             </button>

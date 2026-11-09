@@ -4,10 +4,10 @@ import { bestBallWorstBall, defaultBestBallWorstBallSettings } from './bestBallW
 import type { HoleStrokeInput } from './types';
 
 const players: RoundPlayer[] = [
-  { playerId: 'a1', name: 'Anna', exactHandicapUsed: 0, teamId: 'A' },
-  { playerId: 'a2', name: 'Björn', exactHandicapUsed: 0, teamId: 'A' },
-  { playerId: 'b1', name: 'Cecilia', exactHandicapUsed: 0, teamId: 'B' },
-  { playerId: 'b2', name: 'David', exactHandicapUsed: 0, teamId: 'B' },
+  { playerId: 'a1', name: 'Anna', exactHandicapUsed: 0, teamId: 'A', teeId: 'white' },
+  { playerId: 'a2', name: 'Björn', exactHandicapUsed: 0, teamId: 'A', teeId: 'white' },
+  { playerId: 'b1', name: 'Cecilia', exactHandicapUsed: 0, teamId: 'B', teeId: 'white' },
+  { playerId: 'b2', name: 'David', exactHandicapUsed: 0, teamId: 'B', teeId: 'white' },
 ];
 
 function holeInput(

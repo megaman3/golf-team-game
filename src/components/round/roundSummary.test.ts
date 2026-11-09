@@ -3,10 +3,10 @@ import type { RoundPlayer } from '../../domain/types';
 import { describeRoundResult, teamLabel } from './roundSummary';
 
 const players: RoundPlayer[] = [
-  { playerId: 'a1', name: 'Anna', exactHandicapUsed: 0, teamId: 'A' },
-  { playerId: 'a2', name: 'Björn', exactHandicapUsed: 0, teamId: 'A' },
-  { playerId: 'b1', name: 'Cecilia', exactHandicapUsed: 0, teamId: 'B' },
-  { playerId: 'b2', name: 'David', exactHandicapUsed: 0, teamId: 'B' },
+  { playerId: 'a1', name: 'Anna', exactHandicapUsed: 0, teamId: 'A', teeId: 'white' },
+  { playerId: 'a2', name: 'Björn', exactHandicapUsed: 0, teamId: 'A', teeId: 'white' },
+  { playerId: 'b1', name: 'Cecilia', exactHandicapUsed: 0, teamId: 'B', teeId: 'white' },
+  { playerId: 'b2', name: 'David', exactHandicapUsed: 0, teamId: 'B', teeId: 'white' },
 ];
 
 describe('teamLabel', () => {

@@ -19,9 +19,8 @@ export function HistoryDetail({ roundId, onBack }: HistoryDetailProps) {
   const { storage, update } = useStorage();
   const round = storage.roundsHistory.find((r) => r.id === roundId);
   const course = round ? storage.courses.find((c) => c.id === round.courseId) : undefined;
-  const tee = course && round ? course.tees.find((t) => t.id === round.teeId) : undefined;
 
-  if (!round || !course || !tee) {
+  if (!round || !course) {
     return (
       <div className="history-detail">
         <button type="button" onClick={onBack}>
@@ -33,7 +32,7 @@ export function HistoryDetail({ roundId, onBack }: HistoryDetailProps) {
   }
 
   const format = getGameFormat(round.formatId);
-  const result = computeRoundResult(round, course, tee);
+  const result = computeRoundResult(round, course);
   const holes = Array.from({ length: course.holes }, (_, i) => i + 1);
   const splitPoint = Math.ceil(course.holes / 2);
   const front = holes.slice(0, splitPoint);
@@ -69,7 +68,7 @@ export function HistoryDetail({ roundId, onBack }: HistoryDetailProps) {
       </div>
 
       <h2>
-        {course.club} – {course.name} ({tee.label})
+        {course.club} – {course.name}
       </h2>
       <p className="history-detail__meta">
         {formatRoundDate(round.completedAt ?? round.startedAt)} · {format.label}
@@ -77,13 +76,17 @@ export function HistoryDetail({ roundId, onBack }: HistoryDetailProps) {
       <p className="history-detail__result">{describeRoundResult(result.totals, round.players)}</p>
 
       <ul className="history-detail__players">
-        {round.players.map((player) => (
-          <li key={player.playerId}>
-            {player.name}
-            {player.teamId ? ` (Lag ${player.teamId})` : ''} —{' '}
-            {player.exactHandicapUsed == null ? 'Scratch' : `Hcp ${player.exactHandicapUsed}`}
-          </li>
-        ))}
+        {round.players.map((player) => {
+          const tee = course.tees.find((t) => t.id === player.teeId);
+          return (
+            <li key={player.playerId}>
+              {player.name}
+              {player.teamId ? ` (Lag ${player.teamId})` : ''} —{' '}
+              {player.exactHandicapUsed == null ? 'Scratch' : `Hcp ${player.exactHandicapUsed}`}
+              {tee ? ` · Tee ${tee.label}` : ''}
+            </li>
+          );
+        })}
       </ul>
 
       <div className="history-detail__scroll">

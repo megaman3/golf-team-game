@@ -24,15 +24,14 @@ export function HoleEntry({ onShowScorecard, onFinished }: HoleEntryProps) {
   const { storage, update } = useStorage();
   const round = storage.inProgressRound;
   const course = round ? storage.courses.find((c) => c.id === round.courseId) : undefined;
-  const tee = course && round ? course.tees.find((t) => t.id === round.teeId) : undefined;
 
   const result = useMemo(() => {
-    if (!round || !course || !tee) return null;
-    return computeRoundResult(round, course, tee);
-  }, [round, course, tee]);
+    if (!round || !course) return null;
+    return computeRoundResult(round, course);
+  }, [round, course]);
 
-  if (!round || !course || !tee || !result) {
-    return <p>Kunde inte hitta bana/tee för den pågående rundan.</p>;
+  if (!round || !course || !result) {
+    return <p>Kunde inte hitta bana för den pågående rundan.</p>;
   }
 
   const format = getGameFormat(round.formatId);
@@ -75,7 +74,7 @@ export function HoleEntry({ onShowScorecard, onFinished }: HoleEntryProps) {
     <div className="hole-entry">
       <div className="hole-entry__top">
         <p className="hole-entry__course">
-          {course.club} – {course.name} ({tee.label}) · {format.label}
+          {course.club} – {course.name} · {format.label}
         </p>
         <button type="button" className="hole-entry__scorecard-link" onClick={onShowScorecard}>
           Scorekort
@@ -96,9 +95,10 @@ export function HoleEntry({ onShowScorecard, onFinished }: HoleEntryProps) {
       <ul className="hole-entry__players">
         {round.players.map((player) => {
           const strokes = round.holeScores[holeArrayIndex]?.strokesByPlayer[player.playerId] ?? null;
+          const tee = course.tees.find((t) => t.id === player.teeId);
           const handicapStrokes = computeHandicapStrokes({
             exactHandicap: round.scratch ? null : player.exactHandicapUsed,
-            tee,
+            tee: tee ?? {},
             coursePar,
             holeIndex,
             holesCount: course.holes,
@@ -110,6 +110,7 @@ export function HoleEntry({ onShowScorecard, onFinished }: HoleEntryProps) {
               <div className="hole-entry__player-name">
                 <span>{player.name}</span>
                 {player.teamId && <span className="hole-entry__badge">Lag {player.teamId}</span>}
+                {tee && <span className="hole-entry__badge">Tee {tee.label}</span>}
                 {handicapStrokes !== 0 && (
                   <span className="hole-entry__badge hole-entry__badge--hcp">
                     {handicapStrokes > 0 ? `+${handicapStrokes}` : handicapStrokes}

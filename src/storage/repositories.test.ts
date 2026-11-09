@@ -9,7 +9,6 @@ import type { Round } from '../domain/types';
 const round: Round = {
   id: 'r1',
   courseId: 'barseback-ocean',
-  teeId: 'white',
   formatId: 'bestBallWorstBall',
   scratch: false,
   players: [],

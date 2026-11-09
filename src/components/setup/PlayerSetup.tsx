@@ -1,9 +1,10 @@
-import type { TeamId } from '../../domain/types';
+import type { TeamId, Tee } from '../../domain/types';
 
 export interface DraftPlayer {
   name: string;
   handicap: string;
   team: TeamId;
+  teeId: string;
 }
 
 interface PlayerSetupProps {
@@ -11,10 +12,11 @@ interface PlayerSetupProps {
   usesTeams: boolean;
   players: DraftPlayer[];
   rosterNames: string[];
+  tees: Tee[];
   onChange: (players: DraftPlayer[]) => void;
 }
 
-export function PlayerSetup({ playerCount, usesTeams, players, rosterNames, onChange }: PlayerSetupProps) {
+export function PlayerSetup({ playerCount, usesTeams, players, rosterNames, tees, onChange }: PlayerSetupProps) {
   function updatePlayer(index: number, patch: Partial<DraftPlayer>) {
     onChange(players.map((player, i) => (i === index ? { ...player, ...patch } : player)));
   }
@@ -45,6 +47,18 @@ export function PlayerSetup({ playerCount, usesTeams, players, rosterNames, onCh
               value={player.handicap}
               onChange={(e) => updatePlayer(index, { handicap: e.target.value })}
             />
+            <select
+              className="player-setup__tee"
+              value={player.teeId}
+              onChange={(e) => updatePlayer(index, { teeId: e.target.value })}
+              disabled={tees.length === 0}
+            >
+              {tees.map((tee) => (
+                <option key={tee.id} value={tee.id}>
+                  Tee {tee.label}
+                </option>
+              ))}
+            </select>
             {usesTeams && (
               <select
                 value={player.team}
