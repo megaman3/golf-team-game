@@ -2,6 +2,7 @@ import { useState } from 'react';
 import './App.css';
 import { TabBar, type TabId } from './components/layout/TabBar';
 import { RoundSetup } from './components/setup/RoundSetup';
+import { HoleEntry } from './components/round/HoleEntry';
 import { useStorage } from './StorageContext';
 
 function TabPlaceholder({ title }: { title: string }) {
@@ -16,9 +17,7 @@ function TabPlaceholder({ title }: { title: string }) {
 function RundaTab() {
   const { storage } = useStorage();
   if (storage.inProgressRound) {
-    // Hålinmatningsskärmen byggs i nästa steg - tills den finns visas bara
-    // att en runda pågår, så datan inte tappas bort.
-    return <TabPlaceholder title="Runda pågår" />;
+    return <HoleEntry />;
   }
   return <RoundSetup />;
 }

@@ -1,0 +1,129 @@
+.hole-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 480px;
+}
+
+.hole-entry__nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.hole-entry__nav button {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.hole-entry__nav button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.hole-entry__hole-info {
+  text-align: center;
+  flex: 1;
+}
+
+.hole-entry__players {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.hole-entry__player {
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 4px;
+}
+
+.hole-entry__player-name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+}
+
+.hole-entry__badge {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 1px 8px;
+}
+
+.hole-entry__badge--hcp {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.hole-entry__net {
+  grid-column: 1 / -1;
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.hole-entry__stroke-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hole-entry__stroke-button {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  background: var(--color-primary);
+  color: var(--color-primary-contrast);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.hole-entry__stroke-count {
+  min-width: 28px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.hole-entry__summary,
+.hole-entry__standings {
+  border-top: 1px solid var(--color-border);
+  padding-top: 12px;
+  font-size: 14px;
+  color: var(--color-text-muted);
+}
+
+.hole-entry__standings h3 {
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.hole-entry__finish {
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  background: var(--color-primary);
+  color: var(--color-primary-contrast);
+  cursor: pointer;
+}
