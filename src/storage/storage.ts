@@ -35,15 +35,22 @@ export function saveStorage(backend: StorageLike, storage: AppStorage): void {
   }
 }
 
-// New seed courses shipped in a later app version wouldn't otherwise reach
-// browsers that already have saved data, since a saved `courses` array
-// always wins over the shipped seed. Appending any seed course whose id
-// isn't already present picks up new courses without touching the ones a
-// person may have already edited (e.g. a corrected hole index).
-function mergeSeedCourses(courses: Course[]): Course[] {
+// Course data shipped in the app (par, index, tees, club/name) wouldn't
+// otherwise reach browsers that already have saved data, since a saved
+// `courses` array always wins over the shipped seed. The only field a
+// person can actually edit in the UI is a hole's index (via the
+// Scorecard); everything else always gets refreshed from the current
+// seed, and any seed course missing entirely gets appended.
+function reconcileCourses(courses: Course[]): Course[] {
+  const seedById = new Map(seedCourses.map((c) => [c.id, c]));
+  const reconciled = courses.map((course) => {
+    const seed = seedById.get(course.id);
+    return seed ? { ...seed, index: course.index } : course;
+  });
+
   const existingIds = new Set(courses.map((c) => c.id));
   const missing = seedCourses.filter((c) => !existingIds.has(c.id));
-  return missing.length > 0 ? [...courses, ...missing] : courses;
+  return missing.length > 0 ? [...reconciled, ...missing] : reconciled;
 }
 
 function migrate(parsed: unknown): AppStorage {
@@ -61,7 +68,7 @@ function migrate(parsed: unknown): AppStorage {
   const defaults = createDefaultStorage();
   return {
     schemaVersion: SCHEMA_VERSION,
-    courses: mergeSeedCourses(Array.isArray(value.courses) ? (value.courses as AppStorage['courses']) : defaults.courses),
+    courses: reconcileCourses(Array.isArray(value.courses) ? (value.courses as AppStorage['courses']) : defaults.courses),
     players: Array.isArray(value.players) ? (value.players as AppStorage['players']) : defaults.players,
     formatSettings:
       typeof value.formatSettings === 'object' && value.formatSettings !== null

@@ -75,6 +75,32 @@ describe('loadStorage', () => {
     expect(storage.courses).toHaveLength(seedCourses.length);
   });
 
+  it('refreshes a saved course\'s non-index fields from the current seed, keeping an edited index', () => {
+    const backend = createMemoryStorage();
+    const seedOcean = seedCourses[0];
+    // Simulate an older save from before a tee-naming fix shipped, with a
+    // user-edited index that must survive the refresh.
+    const staleOcean = { ...seedOcean, tees: [{ id: 'old-tee', label: 'Gammal', lengthMeters: 1 }], index: [...seedOcean.index].reverse() };
+    backend.setItem(
+      'golf-team-game:v1',
+      JSON.stringify({
+        schemaVersion: SCHEMA_VERSION,
+        courses: [staleOcean],
+        players: [],
+        formatSettings: {},
+        roundsHistory: [],
+        inProgressRound: null,
+      }),
+    );
+
+    const storage = loadStorage(backend);
+
+    const ocean = storage.courses.find((c) => c.id === seedOcean.id);
+    expect(ocean?.tees).toEqual(seedOcean.tees);
+    expect(ocean?.par).toEqual(seedOcean.par);
+    expect(ocean?.index).toEqual(staleOcean.index);
+  });
+
   it('fills in missing fields with defaults when the saved shape is partial', () => {
     const backend = createMemoryStorage();
     backend.setItem('golf-team-game:v1', JSON.stringify({ schemaVersion: SCHEMA_VERSION, players: [] }));
