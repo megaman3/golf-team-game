@@ -141,6 +141,12 @@
   margin-bottom: 4px;
 }
 
+.hole-entry__match-status {
+  margin: 4px 0 0;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
 .hole-entry__finish-area {
   display: flex;
   flex-direction: column;

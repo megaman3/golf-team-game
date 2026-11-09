@@ -7,7 +7,7 @@ import { computeRoundResult } from '../../engine/roundResult';
 import type { HolePointsResult, RoundTotals } from '../../engine/formats/types';
 import { getGameFormat } from '../../engine/formats/registry';
 import { completeRound } from '../../storage/roundRepository';
-import { describeRoundResult, describeWinner, teamLabel } from './roundSummary';
+import { describeMatchStatus, describeRoundResult, describeWinner, teamLabel } from './roundSummary';
 import './HoleEntry.css';
 
 interface BestBallWorstBallDetail {
@@ -143,7 +143,12 @@ export function HoleEntry({ onShowScorecard, onFinished }: HoleEntryProps) {
       </ul>
 
       <HoleResultSummary result={currentHoleResult} players={round.players} />
-      <RoundStandings totals={result.totals} players={round.players} />
+      <RoundStandings
+        totals={result.totals}
+        players={round.players}
+        holesPlayed={result.holeResults.filter((h) => h.complete).length}
+        totalHoles={course.holes}
+      />
 
       {allComplete && (
         <div className="hole-entry__finish-area">
@@ -182,7 +187,17 @@ function HoleResultSummary({ result, players }: { result: HolePointsResult; play
   );
 }
 
-function RoundStandings({ totals, players }: { totals: RoundTotals; players: RoundPlayer[] }) {
+function RoundStandings({
+  totals,
+  players,
+  holesPlayed,
+  totalHoles,
+}: {
+  totals: RoundTotals;
+  players: RoundPlayer[];
+  holesPlayed: number;
+  totalHoles: number;
+}) {
   if (!totals.pointsByTeam) return null;
 
   return (
@@ -190,6 +205,9 @@ function RoundStandings({ totals, players }: { totals: RoundTotals; players: Rou
       <h3>Ställning</h3>
       <p>
         {teamLabel(players, 'A')} {totals.pointsByTeam.A} – {totals.pointsByTeam.B} {teamLabel(players, 'B')}
+      </p>
+      <p className="hole-entry__match-status">
+        {describeMatchStatus(totals.pointsByTeam, holesPlayed, totalHoles, players)}
       </p>
     </div>
   );
