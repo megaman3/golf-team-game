@@ -4,6 +4,7 @@ import { TabBar, type TabId } from './components/layout/TabBar';
 import { RoundSetup } from './components/setup/RoundSetup';
 import { HoleEntry } from './components/round/HoleEntry';
 import { Scorecard } from './components/round/Scorecard';
+import { RoundSaved } from './components/round/RoundSaved';
 import { useStorage } from './StorageContext';
 
 function TabPlaceholder({ title }: { title: string }) {
@@ -15,19 +16,24 @@ function TabPlaceholder({ title }: { title: string }) {
   );
 }
 
+type RundaView = 'entry' | 'scorecard' | 'saved';
+
 function RundaTab() {
   const { storage } = useStorage();
-  const [view, setView] = useState<'entry' | 'scorecard'>('entry');
+  const [view, setView] = useState<RundaView>('entry');
 
-  if (!storage.inProgressRound) {
-    return <RoundSetup />;
+  if (storage.inProgressRound) {
+    if (view === 'scorecard') {
+      return <Scorecard onSelectHole={() => setView('entry')} />;
+    }
+    return <HoleEntry onShowScorecard={() => setView('scorecard')} onFinished={() => setView('saved')} />;
   }
 
-  if (view === 'scorecard') {
-    return <Scorecard onSelectHole={() => setView('entry')} />;
+  if (view === 'saved') {
+    return <RoundSaved onStartNewRound={() => setView('entry')} />;
   }
 
-  return <HoleEntry onShowScorecard={() => setView('scorecard')} />;
+  return <RoundSetup />;
 }
 
 function App() {

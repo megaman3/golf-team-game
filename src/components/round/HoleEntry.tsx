@@ -7,6 +7,7 @@ import { computeRoundResult } from '../../engine/roundResult';
 import type { HolePointsResult, RoundTotals } from '../../engine/formats/types';
 import { getGameFormat } from '../../engine/formats/registry';
 import { completeRound } from '../../storage/roundRepository';
+import { describeRoundResult, describeWinner, teamLabel } from './roundSummary';
 import './HoleEntry.css';
 
 interface BestBallWorstBallDetail {
@@ -14,36 +15,12 @@ interface BestBallWorstBallDetail {
   worstBallWinner: TeamId | 'tie';
 }
 
-function teamLabel(players: RoundPlayer[], team: TeamId): string {
-  const names = players.filter((p) => p.teamId === team).map((p) => p.name);
-  return names.length > 0 ? `Lag ${team} (${names.join(' & ')})` : `Lag ${team}`;
-}
-
-function describeWinner(players: RoundPlayer[], winner: TeamId | 'tie'): string {
-  return winner === 'tie' ? 'delat' : teamLabel(players, winner);
-}
-
-function describeRoundResult(totals: RoundTotals, players: RoundPlayer[]): string {
-  if (!totals.pointsByTeam || !totals.winnerTeamIds) {
-    return 'Rundan är klar.';
-  }
-  const { A, B } = totals.pointsByTeam;
-  if (totals.winnerTeamIds.length > 1) {
-    return `Oavgjort, ${A}–${B} poäng.`;
-  }
-  const winner = totals.winnerTeamIds[0];
-  if (winner === 'tie') {
-    return 'Rundan är klar.';
-  }
-  const loser: TeamId = winner === 'A' ? 'B' : 'A';
-  return `${teamLabel(players, winner)} vann med ${totals.pointsByTeam[winner]}–${totals.pointsByTeam[loser]} poäng.`;
-}
-
 interface HoleEntryProps {
   onShowScorecard: () => void;
+  onFinished: () => void;
 }
 
-export function HoleEntry({ onShowScorecard }: HoleEntryProps) {
+export function HoleEntry({ onShowScorecard, onFinished }: HoleEntryProps) {
   const { storage, update } = useStorage();
   const round = storage.inProgressRound;
   const course = round ? storage.courses.find((c) => c.id === round.courseId) : undefined;
@@ -84,13 +61,14 @@ export function HoleEntry({ onShowScorecard }: HoleEntryProps) {
 
   const handleFinish = () => {
     const resultText = describeRoundResult(result.totals, round.players);
-    const confirmed = window.confirm(`${resultText}\n\nSpara rundan till historiken och starta en ny runda?`);
+    const confirmed = window.confirm(`${resultText}\n\nSpara rundan till historiken?`);
     if (!confirmed) return;
 
     update((current) => {
       if (!current.inProgressRound) return current;
       return completeRound(current, current.inProgressRound);
     });
+    onFinished();
   };
 
   return (
@@ -170,7 +148,7 @@ export function HoleEntry({ onShowScorecard }: HoleEntryProps) {
         <div className="hole-entry__finish-area">
           <p className="hole-entry__final-result">{describeRoundResult(result.totals, round.players)}</p>
           <button type="button" className="hole-entry__finish" onClick={handleFinish}>
-            Spara till historik och starta ny runda
+            Spara och avsluta
           </button>
         </div>
       )}
