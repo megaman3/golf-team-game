@@ -1,0 +1,30 @@
+[
+  {
+    "id": "barseback-ocean",
+    "club": "Barsebäck Golf & Resort",
+    "name": "Ocean Course",
+    "holes": 18,
+    "par": [4, 4, 4, 3, 5, 4, 4, 3, 5, 4, 4, 5, 4, 4, 3, 5, 4, 4],
+    "index": [3, 17, 11, 7, 15, 5, 1, 13, 9, 8, 4, 18, 12, 6, 14, 16, 2, 10],
+    "tees": [
+      { "id": "blue", "label": "Blå", "lengthMeters": 5586 },
+      { "id": "red", "label": "Röd", "lengthMeters": 5170 },
+      { "id": "white", "label": "Vit", "lengthMeters": 6482 },
+      { "id": "yellow", "label": "Gul", "lengthMeters": 6077 }
+    ]
+  },
+  {
+    "id": "barseback-pine",
+    "club": "Barsebäck Golf & Resort",
+    "name": "Pine Course",
+    "holes": 18,
+    "par": [4, 4, 3, 5, 4, 3, 4, 5, 4, 4, 4, 4, 3, 4, 3, 5, 4, 4],
+    "index": [11, 7, 17, 9, 3, 13, 1, 15, 5, 14, 6, 10, 16, 2, 18, 12, 4, 8],
+    "tees": [
+      { "id": "blue", "label": "Blå", "lengthMeters": 5269 },
+      { "id": "red", "label": "Röd", "lengthMeters": 4760 },
+      { "id": "white", "label": "Vit", "lengthMeters": 5846 },
+      { "id": "yellow", "label": "Gul", "lengthMeters": 5542 }
+    ]
+  }
+]
