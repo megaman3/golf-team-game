@@ -5,6 +5,13 @@
   max-width: 480px;
 }
 
+.hole-entry__course {
+  margin: 0;
+  text-align: center;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
 .hole-entry__nav {
   display: flex;
   align-items: center;

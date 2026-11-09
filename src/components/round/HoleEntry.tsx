@@ -69,6 +69,9 @@ export function HoleEntry() {
 
   return (
     <div className="hole-entry">
+      <p className="hole-entry__course">
+        {course.club} – {course.name} ({tee.label})
+      </p>
       <div className="hole-entry__nav">
         <button type="button" disabled={currentHole <= 1} onClick={() => goToHole(currentHole - 1)}>
           ←
