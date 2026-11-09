@@ -51,11 +51,13 @@
     "par": [5, 4, 4, 3, 4, 3, 4, 5, 4, 4, 5, 4, 4, 4, 3, 4, 3, 5],
     "index": [11, 7, 13, 5, 15, 17, 3, 9, 1, 12, 4, 16, 6, 18, 10, 2, 8, 14],
     "tees": [
-      { "id": "yellow", "label": "Gul", "lengthMeters": 6791 },
-      { "id": "white", "label": "Vit", "lengthMeters": 6519 },
-      { "id": "blue", "label": "Blå", "lengthMeters": 6111 },
-      { "id": "red", "label": "Röd", "lengthMeters": 5856 },
-      { "id": "orange", "label": "Orange", "lengthMeters": 5364 }
+      { "id": "68", "label": "68", "lengthMeters": 6781 },
+      { "id": "65", "label": "65", "lengthMeters": 6519 },
+      { "id": "62", "label": "62", "lengthMeters": 6181 },
+      { "id": "59", "label": "59", "lengthMeters": 5856 },
+      { "id": "54", "label": "54", "lengthMeters": 5364 },
+      { "id": "51", "label": "51", "lengthMeters": 5059 },
+      { "id": "48", "label": "48", "lengthMeters": 4840 }
     ]
   }
 ]

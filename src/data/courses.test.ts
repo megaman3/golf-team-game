@@ -38,8 +38,8 @@ describe('seed courses', () => {
     expect(links.tees.map((t) => t.id).sort()).toEqual(['49', '53', '58', '61', '65', '68']);
   });
 
-  it('The National Lakes course has its own club-specific tee set', () => {
+  it('The National Lakes course is labeled by its own seven course-length tees', () => {
     const lakes = seedCourses.find((c) => c.id === 'the-national-lakes')!;
-    expect(lakes.tees.map((t) => t.id).sort()).toEqual(['blue', 'orange', 'red', 'white', 'yellow']);
+    expect(lakes.tees.map((t) => t.id).sort()).toEqual(['48', '51', '54', '59', '62', '65', '68']);
   });
 });
