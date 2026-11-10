@@ -4,9 +4,11 @@ import type { TeamId } from '../../domain/types';
 import { setPlayerStroke } from '../../domain/roundEditing';
 import { computeRoundResult } from '../../engine/roundResult';
 import { getGameFormat } from '../../engine/formats/registry';
+import { handicapStrokesForPlayerOnHole } from '../../engine/handicap';
 import { deleteRoundFromHistory, updateRoundInHistory } from '../../storage/roundRepository';
 import { describeRoundResult, formatRoundDate } from '../round/roundSummary';
 import { RoundCharts } from '../round/RoundCharts';
+import { scoreCellClassName } from '../round/scoreCellClass';
 import './HistoryDetail.css';
 
 interface HistoryDetailProps {
@@ -155,22 +157,32 @@ export function HistoryDetail({ roundId, onBack }: HistoryDetailProps) {
               const total = outSum != null && inSum != null ? outSum + inSum : null;
               const renderStrokeCell = (h: number) => {
                 const strokes = round.holeScores[h - 1]?.strokesByPlayer[player.playerId] ?? null;
-                if (!editing) return strokes ?? '–';
+                const net = strokes != null ? strokes - handicapStrokesForPlayerOnHole(round, course, player.playerId, h) : null;
+                const className = scoreCellClassName(net, course.par[h - 1]);
+                if (!editing) {
+                  return (
+                    <td key={h} className={className}>
+                      {strokes ?? '–'}
+                    </td>
+                  );
+                }
                 return (
-                  <input
-                    type="number"
-                    className="history-detail__stroke-input"
-                    value={strokes ?? ''}
-                    onChange={(e) => handleStrokeChange(player.playerId, h, e.target.value)}
-                  />
+                  <td key={h} className={className}>
+                    <input
+                      type="number"
+                      className="history-detail__stroke-input"
+                      value={strokes ?? ''}
+                      onChange={(e) => handleStrokeChange(player.playerId, h, e.target.value)}
+                    />
+                  </td>
                 );
               };
               return (
                 <tr key={player.playerId}>
                   <th scope="row">{player.name}</th>
-                  {front.map((h) => <td key={h}>{renderStrokeCell(h)}</td>)}
+                  {front.map((h) => renderStrokeCell(h))}
                   <td className="history-detail__summary-col">{outSum ?? '–'}</td>
-                  {back.map((h) => <td key={h}>{renderStrokeCell(h)}</td>)}
+                  {back.map((h) => renderStrokeCell(h))}
                   <td className="history-detail__summary-col">{inSum ?? '–'}</td>
                   <td className="history-detail__summary-col">{total ?? '–'}</td>
                 </tr>

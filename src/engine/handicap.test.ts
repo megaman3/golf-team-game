@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { computeHandicapStrokes, playingHandicap, strokesOnHole } from './handicap';
+import { computeHandicapStrokes, handicapStrokesForPlayerOnHole, playingHandicap, strokesOnHole } from './handicap';
+import type { Course, Round } from '../domain/types';
 
 const indices = Array.from({ length: 18 }, (_, i) => i + 1);
 
@@ -100,5 +101,36 @@ describe('computeHandicapStrokes', () => {
         holeIndex: 2,
       }),
     ).toBe(1);
+  });
+});
+
+describe('handicapStrokesForPlayerOnHole', () => {
+  const course: Pick<Course, 'par' | 'index' | 'holes' | 'tees'> = {
+    par: [4, 4, 4],
+    index: [1, 2, 3],
+    holes: 3,
+    tees: [{ id: 'white', label: 'Vit' }],
+  };
+
+  it("looks up the player's tee and handicap and resolves their strokes on the hole", () => {
+    const round: Pick<Round, 'scratch' | 'players'> = {
+      scratch: false,
+      players: [{ playerId: 'p1', name: 'A', exactHandicapUsed: 2, teeId: 'white' }],
+    };
+    expect(handicapStrokesForPlayerOnHole(round, course, 'p1', 1)).toBe(1);
+    expect(handicapStrokesForPlayerOnHole(round, course, 'p1', 3)).toBe(0);
+  });
+
+  it('returns 0 for a scratch round regardless of the stored handicap', () => {
+    const round: Pick<Round, 'scratch' | 'players'> = {
+      scratch: true,
+      players: [{ playerId: 'p1', name: 'A', exactHandicapUsed: 24, teeId: 'white' }],
+    };
+    expect(handicapStrokesForPlayerOnHole(round, course, 'p1', 1)).toBe(0);
+  });
+
+  it('returns 0 for a player not in the round', () => {
+    const round: Pick<Round, 'scratch' | 'players'> = { scratch: false, players: [] };
+    expect(handicapStrokesForPlayerOnHole(round, course, 'missing', 1)).toBe(0);
   });
 });

@@ -1,4 +1,4 @@
-import type { Tee } from '../domain/types';
+import type { Course, Round, Tee } from '../domain/types';
 
 export function playingHandicap(
   exactHandicap: number,
@@ -34,4 +34,25 @@ export function computeHandicapStrokes(input: HandicapStrokeInput): number {
   }
   const hcp = playingHandicap(input.exactHandicap, input.tee, input.coursePar);
   return strokesOnHole(hcp, input.holeIndex, input.holesCount ?? 18);
+}
+
+// Looks up one player's handicap strokes on one hole of a round, resolving
+// their tee and scratch status. Returns 0 if the player isn't in the round.
+export function handicapStrokesForPlayerOnHole(
+  round: Pick<Round, 'scratch' | 'players'>,
+  course: Pick<Course, 'par' | 'index' | 'holes' | 'tees'>,
+  playerId: string,
+  hole: number,
+): number {
+  const player = round.players.find((p) => p.playerId === playerId);
+  if (!player) return 0;
+  const tee = course.tees.find((t) => t.id === player.teeId);
+  const coursePar = course.par.reduce((sum, p) => sum + p, 0);
+  return computeHandicapStrokes({
+    exactHandicap: round.scratch ? null : player.exactHandicapUsed,
+    tee: tee ?? {},
+    coursePar,
+    holeIndex: course.index[hole - 1],
+    holesCount: course.holes,
+  });
 }

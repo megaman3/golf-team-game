@@ -2,9 +2,11 @@ import { useStorage } from '../../StorageContext';
 import { setCurrentHole } from '../../domain/roundEditing';
 import { computeRoundResult } from '../../engine/roundResult';
 import { getGameFormat } from '../../engine/formats/registry';
+import { handicapStrokesForPlayerOnHole } from '../../engine/handicap';
 import { CourseBackground } from '../common/CourseBackground';
 import { getCourseBackgroundImage } from '../../data/courseImages';
 import { RoundCharts } from './RoundCharts';
+import { scoreCellClassName } from './scoreCellClass';
 import './Scorecard.css';
 
 interface ScorecardProps {
@@ -142,16 +144,21 @@ export function Scorecard({ onSelectHole }: ScorecardProps) {
               const outSum = playerStrokesSum(player.playerId, front);
               const inSum = playerStrokesSum(player.playerId, back);
               const total = outSum != null && inSum != null ? outSum + inSum : null;
+              const renderStrokeCell = (hole: number) => {
+                const strokes = round.holeScores[hole - 1]?.strokesByPlayer[player.playerId] ?? null;
+                const net = strokes != null ? strokes - handicapStrokesForPlayerOnHole(round, course, player.playerId, hole) : null;
+                return (
+                  <td key={hole} className={scoreCellClassName(net, course.par[hole - 1])}>
+                    {strokes ?? '–'}
+                  </td>
+                );
+              };
               return (
                 <tr key={player.playerId}>
                   <th scope="row">{player.name}</th>
-                  {front.map((hole) => (
-                    <td key={hole}>{round.holeScores[hole - 1]?.strokesByPlayer[player.playerId] ?? '–'}</td>
-                  ))}
+                  {front.map((hole) => renderStrokeCell(hole))}
                   <td className="scorecard__summary-col">{outSum ?? '–'}</td>
-                  {back.map((hole) => (
-                    <td key={hole}>{round.holeScores[hole - 1]?.strokesByPlayer[player.playerId] ?? '–'}</td>
-                  ))}
+                  {back.map((hole) => renderStrokeCell(hole))}
                   <td className="scorecard__summary-col">{inSum ?? '–'}</td>
                   <td className="scorecard__summary-col">{total ?? '–'}</td>
                 </tr>

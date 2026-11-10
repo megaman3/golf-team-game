@@ -18,6 +18,20 @@
      backdrop rather than something the content competes with. */
   --color-bg-scrim: rgba(255, 255, 255, 0.9);
 
+  /* Net-score-vs-par scorecard colors. Par itself is left unstyled. */
+  --score-double-eagle-bg: #1a56c4;
+  --score-double-eagle-text: #ffffff;
+  --score-eagle-bg: #4f93f0;
+  --score-eagle-text: #ffffff;
+  --score-birdie-bg: #cfe4fb;
+  --score-birdie-text: #0a1a2e;
+  --score-bogey-bg: #ffe27a;
+  --score-bogey-text: #3a2e00;
+  --score-double-bogey-bg: #ffab5e;
+  --score-double-bogey-text: #3a1f00;
+  --score-triple-bogey-bg: #8a6a52;
+  --score-triple-bogey-text: #ffffff;
+
   font: 16px/1.4 system-ui, 'Segoe UI', Roboto, sans-serif;
   color-scheme: light dark;
   color: var(--color-text);
@@ -41,7 +55,50 @@
     --chart-axis: #383835;
 
     --color-bg-scrim: rgba(16, 20, 15, 0.88);
+
+    --score-double-eagle-bg: #2f6fe0;
+    --score-double-eagle-text: #ffffff;
+    --score-eagle-bg: #5fa0f2;
+    --score-eagle-text: #0a1a2e;
+    --score-birdie-bg: #9cc9f5;
+    --score-birdie-text: #0a1a2e;
+    --score-bogey-bg: #e6c257;
+    --score-bogey-text: #2a2000;
+    --score-double-bogey-bg: #e0924a;
+    --score-double-bogey-text: #2a1400;
+    --score-triple-bogey-bg: #a9826a;
+    --score-triple-bogey-text: #1a1008;
   }
+}
+
+.score-cell--double-eagle {
+  background: var(--score-double-eagle-bg);
+  color: var(--score-double-eagle-text);
+}
+
+.score-cell--eagle {
+  background: var(--score-eagle-bg);
+  color: var(--score-eagle-text);
+}
+
+.score-cell--birdie {
+  background: var(--score-birdie-bg);
+  color: var(--score-birdie-text);
+}
+
+.score-cell--bogey {
+  background: var(--score-bogey-bg);
+  color: var(--score-bogey-text);
+}
+
+.score-cell--double-bogey {
+  background: var(--score-double-bogey-bg);
+  color: var(--score-double-bogey-text);
+}
+
+.score-cell--triple-bogey-or-worse {
+  background: var(--score-triple-bogey-bg);
+  color: var(--score-triple-bogey-text);
 }
 
 * {
