@@ -1,12 +1,24 @@
 import { describe, expect, it } from 'vitest';
 import type { RoundPlayer } from '../../domain/types';
-import { describeMatchStatus, describeRoundResult, teamLabel } from './roundSummary';
+import {
+  describeMatchStatus,
+  describePlayerStandings,
+  describeRoundResult,
+  describeStandingsGap,
+  teamLabel,
+} from './roundSummary';
 
 const players: RoundPlayer[] = [
   { playerId: 'a1', name: 'Anna', exactHandicapUsed: 0, teamId: 'A', teeId: 'white' },
   { playerId: 'a2', name: 'Björn', exactHandicapUsed: 0, teamId: 'A', teeId: 'white' },
   { playerId: 'b1', name: 'Cecilia', exactHandicapUsed: 0, teamId: 'B', teeId: 'white' },
   { playerId: 'b2', name: 'David', exactHandicapUsed: 0, teamId: 'B', teeId: 'white' },
+];
+
+const threePlayers: RoundPlayer[] = [
+  { playerId: 'a', name: 'Anna', exactHandicapUsed: 0, teeId: 'white' },
+  { playerId: 'b', name: 'Björn', exactHandicapUsed: 0, teeId: 'white' },
+  { playerId: 'c', name: 'Cecilia', exactHandicapUsed: 0, teeId: 'white' },
 ];
 
 describe('teamLabel', () => {
@@ -24,6 +36,34 @@ describe('describeRoundResult', () => {
   it('describes a tied total', () => {
     const text = describeRoundResult({ pointsByTeam: { A: 7, B: 7 }, winnerTeamIds: ['A', 'B'] }, players);
     expect(text).toBe('Oavgjort, 7–7 poäng.');
+  });
+
+  it('names a single winning player (individual format)', () => {
+    const text = describeRoundResult(
+      { pointsByPlayer: { a: 10, b: 6, c: 4 }, winnerPlayerIds: ['a'] },
+      threePlayers,
+    );
+    expect(text).toBe('Anna vann (Anna 10 – Björn 6 – Cecilia 4 poäng).');
+  });
+
+  it('describes a shared win among tied players (individual format)', () => {
+    const text = describeRoundResult(
+      { pointsByPlayer: { a: 8, b: 8, c: 4 }, winnerPlayerIds: ['a', 'b'] },
+      threePlayers,
+    );
+    expect(text).toBe('Delad seger: Anna & Björn (Anna 8 – Björn 8 – Cecilia 4 poäng).');
+  });
+});
+
+describe('describePlayerStandings', () => {
+  it('sorts players by points, highest first', () => {
+    expect(describePlayerStandings({ a: 4, b: 10, c: 6 }, threePlayers)).toBe('Björn 10 – Cecilia 6 – Anna 4');
+  });
+});
+
+describe('describeStandingsGap', () => {
+  it('normalizes so the lowest scorer reads as 0 (10-6-4 -> 6-2-0)', () => {
+    expect(describeStandingsGap({ a: 10, b: 6, c: 4 }, threePlayers)).toBe('Anna 6 – Björn 2 – Cecilia 0');
   });
 });
 

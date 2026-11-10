@@ -49,18 +49,59 @@ export function describeMatchStatus(
   return `${leaderLabel} ${margin} upp`;
 }
 
+// Sorted "Namn X – Namn Y – Namn Z" line for individual-player formats
+// (Köpenhamare), highest points first.
+export function describePlayerStandings(
+  pointsByPlayer: Record<string, number> | undefined,
+  players: RoundPlayer[],
+): string | null {
+  if (!pointsByPlayer) return null;
+  return [...players]
+    .sort((a, b) => (pointsByPlayer[b.playerId] ?? 0) - (pointsByPlayer[a.playerId] ?? 0))
+    .map((p) => `${p.name} ${pointsByPlayer[p.playerId] ?? 0}`)
+    .join(' – ');
+}
+
+// The same standings, normalized so the lowest scorer reads as 0 (e.g.
+// "10-6-4" becomes "6-2-0") - shows the point gap at a glance without the
+// absolute totals.
+export function describeStandingsGap(
+  pointsByPlayer: Record<string, number> | undefined,
+  players: RoundPlayer[],
+): string | null {
+  if (!pointsByPlayer) return null;
+  const values = Object.values(pointsByPlayer);
+  if (values.length === 0) return null;
+  const min = Math.min(...values);
+  return [...players]
+    .sort((a, b) => (pointsByPlayer[b.playerId] ?? 0) - (pointsByPlayer[a.playerId] ?? 0))
+    .map((p) => `${p.name} ${(pointsByPlayer[p.playerId] ?? 0) - min}`)
+    .join(' – ');
+}
+
 export function describeRoundResult(totals: RoundTotals, players: RoundPlayer[]): string {
-  if (!totals.pointsByTeam || !totals.winnerTeamIds) {
-    return 'Rundan är klar.';
+  if (totals.pointsByTeam && totals.winnerTeamIds) {
+    const { A, B } = totals.pointsByTeam;
+    if (totals.winnerTeamIds.length > 1) {
+      return `Oavgjort, ${A}–${B} poäng.`;
+    }
+    const winner = totals.winnerTeamIds[0];
+    if (winner === 'tie') {
+      return 'Rundan är klar.';
+    }
+    const loser: TeamId = winner === 'A' ? 'B' : 'A';
+    return `${teamLabel(players, winner)} vann med ${totals.pointsByTeam[winner]}–${totals.pointsByTeam[loser]} poäng.`;
   }
-  const { A, B } = totals.pointsByTeam;
-  if (totals.winnerTeamIds.length > 1) {
-    return `Oavgjort, ${A}–${B} poäng.`;
+
+  if (totals.pointsByPlayer && totals.winnerPlayerIds) {
+    const standings = describePlayerStandings(totals.pointsByPlayer, players);
+    if (totals.winnerPlayerIds.length > 1) {
+      const names = totals.winnerPlayerIds.map((id) => players.find((p) => p.playerId === id)?.name ?? id);
+      return `Delad seger: ${names.join(' & ')} (${standings} poäng).`;
+    }
+    const winner = players.find((p) => p.playerId === totals.winnerPlayerIds![0]);
+    return `${winner?.name ?? 'Okänd'} vann (${standings} poäng).`;
   }
-  const winner = totals.winnerTeamIds[0];
-  if (winner === 'tie') {
-    return 'Rundan är klar.';
-  }
-  const loser: TeamId = winner === 'A' ? 'B' : 'A';
-  return `${teamLabel(players, winner)} vann med ${totals.pointsByTeam[winner]}–${totals.pointsByTeam[loser]} poäng.`;
+
+  return 'Rundan är klar.';
 }
