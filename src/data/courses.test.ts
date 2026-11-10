@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { seedCourses, validateCourseShape } from './courses';
 
 describe('seed courses', () => {
-  it('includes both Barsebäck courses, both The National courses, and all six Örestad combinations', () => {
+  it('includes both Barsebäck courses, both The National courses, all six Örestad combinations, Lunds Akademiska and Falsterbo', () => {
     expect(seedCourses.map((c) => c.id)).toEqual([
       'barseback-ocean',
       'barseback-pine',
@@ -14,6 +14,8 @@ describe('seed courses', () => {
       'orestad-gul-rod',
       'orestad-bla-rod',
       'orestad-bla-gul',
+      'lunds-akademiska',
+      'falsterbo',
     ]);
   });
 
@@ -33,6 +35,8 @@ describe('seed courses', () => {
       'orestad-gul-rod': 71,
       'orestad-bla-rod': 72,
       'orestad-bla-gul': 71,
+      'lunds-akademiska': 72,
+      'falsterbo': 71,
     };
     for (const course of seedCourses) {
       expect(course.par.reduce((sum, par) => sum + par, 0)).toBe(parByCourseId[course.id]);
@@ -78,6 +82,16 @@ describe('seed courses', () => {
       // But the two orderings are not just duplicates - the hole index differs.
       expect(courseA.index).not.toEqual(courseB.index);
     }
+  });
+
+  it('Lunds Akademiska uses the club\'s standard vit/gul/bla/rod tees', () => {
+    const course = seedCourses.find((c) => c.id === 'lunds-akademiska')!;
+    expect(course.tees.map((t) => t.id).sort()).toEqual(['bla', 'gul', 'rod', 'vit']);
+  });
+
+  it('Falsterbo is labeled by its four course-length tees (meters/100), not colors', () => {
+    const course = seedCourses.find((c) => c.id === 'falsterbo')!;
+    expect(course.tees.map((t) => t.id).sort()).toEqual(['50', '54', '59', '62']);
   });
 
   it('every tee has a plausible slope (55-155) and course rating (50-90) when set', () => {
