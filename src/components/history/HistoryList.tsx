@@ -1,6 +1,7 @@
 import { useStorage } from '../../StorageContext';
 import { getGameFormat } from '../../engine/formats/registry';
 import { computeRoundResult } from '../../engine/roundResult';
+import { deleteRoundFromHistory } from '../../storage/roundRepository';
 import { describeRoundResult, formatRoundDate } from '../round/roundSummary';
 import './HistoryList.css';
 
@@ -9,10 +10,16 @@ interface HistoryListProps {
 }
 
 export function HistoryList({ onOpenRound }: HistoryListProps) {
-  const { storage } = useStorage();
+  const { storage, update } = useStorage();
 
   if (storage.roundsHistory.length === 0) {
     return <p className="history-list__empty">Inga avslutade rundor än.</p>;
+  }
+
+  function handleDelete(roundId: string) {
+    const confirmed = window.confirm('Radera den här rundan från historiken? Det går inte att ångra.');
+    if (!confirmed) return;
+    update((current) => deleteRoundFromHistory(current, roundId));
   }
 
   return (
@@ -31,6 +38,14 @@ export function HistoryList({ onOpenRound }: HistoryListProps) {
               <span className="history-list__course">{course ? `${course.club} – ${course.name}` : 'Okänd bana'}</span>
               <span className="history-list__format">{format.label}</span>
               {resultText && <span className="history-list__result">{resultText}</span>}
+            </button>
+            <button
+              type="button"
+              className="history-list__delete"
+              aria-label="Radera rundan"
+              onClick={() => handleDelete(round.id)}
+            >
+              Radera
             </button>
           </li>
         );
