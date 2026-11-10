@@ -1,0 +1,53 @@
+.slope-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.slope-editor__hint {
+  margin: 0;
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.slope-editor__course {
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 8px 12px;
+}
+
+.slope-editor__course summary {
+  cursor: pointer;
+  font-weight: 600;
+  padding: 4px 0;
+}
+
+.slope-editor__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin-top: 8px;
+}
+
+.slope-editor__table th,
+.slope-editor__table td {
+  border: 1px solid var(--color-border);
+  padding: 6px 8px;
+  text-align: center;
+}
+
+.slope-editor__table thead th {
+  background: var(--color-surface);
+}
+
+.slope-editor__table tbody th {
+  text-align: left;
+}
+
+.slope-editor__input {
+  width: 60px;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  text-align: center;
+  font-size: 13px;
+}

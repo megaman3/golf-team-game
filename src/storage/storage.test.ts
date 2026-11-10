@@ -101,6 +101,33 @@ describe('loadStorage', () => {
     expect(ocean?.index).toEqual(staleOcean.index);
   });
 
+  it('keeps a corrected slope/course rating on a matching tee, refreshing everything else about it', () => {
+    const backend = createMemoryStorage();
+    const seedOcean = seedCourses[0];
+    const correctedTee = { ...seedOcean.tees[0], slope: 999, courseRating: 88.8 };
+    const editedOcean = { ...seedOcean, tees: [correctedTee, ...seedOcean.tees.slice(1)] };
+    backend.setItem(
+      'golf-team-game:v1',
+      JSON.stringify({
+        schemaVersion: SCHEMA_VERSION,
+        courses: [editedOcean],
+        players: [],
+        formatSettings: {},
+        roundsHistory: [],
+        inProgressRound: null,
+      }),
+    );
+
+    const storage = loadStorage(backend);
+
+    const ocean = storage.courses.find((c) => c.id === seedOcean.id);
+    const tee = ocean?.tees.find((t) => t.id === correctedTee.id);
+    expect(tee?.slope).toBe(999);
+    expect(tee?.courseRating).toBe(88.8);
+    // The tee's other fields (label, length) still come from the seed.
+    expect(tee?.label).toBe(seedOcean.tees[0].label);
+  });
+
   it('fills in missing fields with defaults when the saved shape is partial', () => {
     const backend = createMemoryStorage();
     backend.setItem('golf-team-game:v1', JSON.stringify({ schemaVersion: SCHEMA_VERSION, players: [] }));

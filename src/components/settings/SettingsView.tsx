@@ -1,5 +1,6 @@
 import { ExportImportPanel } from './ExportImportPanel';
 import { CourseManager } from './CourseManager';
+import { SlopeEditor } from './SlopeEditor';
 import './SettingsView.css';
 
 export function SettingsView() {
@@ -9,6 +10,8 @@ export function SettingsView() {
       <ExportImportPanel />
       <hr className="settings-view__divider" />
       <CourseManager />
+      <hr className="settings-view__divider" />
+      <SlopeEditor />
     </div>
   );
 }

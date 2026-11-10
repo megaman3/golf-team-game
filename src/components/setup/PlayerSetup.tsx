@@ -31,42 +31,52 @@ export function PlayerSetup({ playerCount, usesTeams, players, rosterNames, tees
       </datalist>
       {Array.from({ length: playerCount }, (_, index) => {
         const player = players[index];
+        const selectedTee = tees.find((t) => t.id === player.teeId);
         return (
-          <div className="player-setup__row" key={index}>
-            <input
-              type="text"
-              list="player-roster"
-              placeholder={`Spelare ${index + 1}`}
-              value={player.name}
-              onChange={(e) => updatePlayer(index, { name: e.target.value })}
-            />
-            <input
-              type="number"
-              step="0.1"
-              placeholder="Hcp"
-              value={player.handicap}
-              onChange={(e) => updatePlayer(index, { handicap: e.target.value })}
-            />
-            <select
-              className="player-setup__tee"
-              value={player.teeId}
-              onChange={(e) => updatePlayer(index, { teeId: e.target.value })}
-              disabled={tees.length === 0}
-            >
-              {tees.map((tee) => (
-                <option key={tee.id} value={tee.id}>
-                  Tee {tee.label}
-                </option>
-              ))}
-            </select>
-            {usesTeams && (
+          <div className="player-setup__entry" key={index}>
+            <div className="player-setup__row">
+              <input
+                type="text"
+                list="player-roster"
+                placeholder={`Spelare ${index + 1}`}
+                value={player.name}
+                onChange={(e) => updatePlayer(index, { name: e.target.value })}
+              />
+              <input
+                type="number"
+                step="0.1"
+                placeholder="Hcp"
+                value={player.handicap}
+                onChange={(e) => updatePlayer(index, { handicap: e.target.value })}
+              />
               <select
-                value={player.team}
-                onChange={(e) => updatePlayer(index, { team: e.target.value as TeamId })}
+                className="player-setup__tee"
+                value={player.teeId}
+                onChange={(e) => updatePlayer(index, { teeId: e.target.value })}
+                disabled={tees.length === 0}
               >
-                <option value="A">Lag A</option>
-                <option value="B">Lag B</option>
+                {tees.map((tee) => (
+                  <option key={tee.id} value={tee.id}>
+                    Tee {tee.label}
+                  </option>
+                ))}
               </select>
+              {usesTeams && (
+                <select
+                  value={player.team}
+                  onChange={(e) => updatePlayer(index, { team: e.target.value as TeamId })}
+                >
+                  <option value="A">Lag A</option>
+                  <option value="B">Lag B</option>
+                </select>
+              )}
+            </div>
+            {selectedTee && (
+              <p className="player-setup__tee-info">
+                {selectedTee.slope != null && selectedTee.courseRating != null
+                  ? `Slope ${selectedTee.slope} · Course rating ${selectedTee.courseRating}`
+                  : 'Slope/course rating saknas - handicap räknas med enkel avrundning'}
+              </p>
             )}
           </div>
         );

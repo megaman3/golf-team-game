@@ -35,17 +35,30 @@ export function saveStorage(backend: StorageLike, storage: AppStorage): void {
   }
 }
 
-// Course data shipped in the app (par, index, tees, club/name) wouldn't
-// otherwise reach browsers that already have saved data, since a saved
-// `courses` array always wins over the shipped seed. The only field a
-// person can actually edit in the UI is a hole's index (via the
-// Scorecard); everything else always gets refreshed from the current
-// seed, and any seed course missing entirely gets appended.
+// Course data shipped in the app (par, tees, club/name) wouldn't otherwise
+// reach browsers that already have saved data, since a saved `courses`
+// array always wins over the shipped seed. Two things a person can edit in
+// the UI survive this refresh: a hole's index (via the Scorecard) and a
+// tee's slope/course rating (via Inställningar) - everything else always
+// gets refreshed from the current seed, and any seed course missing
+// entirely gets appended.
 function reconcileCourses(courses: Course[]): Course[] {
   const seedById = new Map(seedCourses.map((c) => [c.id, c]));
   const reconciled = courses.map((course) => {
     const seed = seedById.get(course.id);
-    return seed ? { ...seed, index: course.index } : course;
+    if (!seed) return course;
+
+    const storedTeesById = new Map(course.tees.map((t) => [t.id, t]));
+    const tees = seed.tees.map((seedTee) => {
+      const storedTee = storedTeesById.get(seedTee.id);
+      return {
+        ...seedTee,
+        slope: storedTee?.slope ?? seedTee.slope,
+        courseRating: storedTee?.courseRating ?? seedTee.courseRating,
+      };
+    });
+
+    return { ...seed, index: course.index, tees };
   });
 
   const existingIds = new Set(courses.map((c) => c.id));
