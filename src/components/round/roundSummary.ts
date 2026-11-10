@@ -1,5 +1,5 @@
 import type { RoundPlayer, TeamId } from '../../domain/types';
-import type { RoundTotals } from '../../engine/formats/types';
+import type { HolePointsResult, RoundTotals } from '../../engine/formats/types';
 
 export function formatRoundDate(iso: string): string {
   return new Date(iso).toLocaleDateString('sv-SE', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -79,18 +79,40 @@ export function describeStandingsGap(
     .join(' – ');
 }
 
-export function describeRoundResult(totals: RoundTotals, players: RoundPlayer[]): string {
+// The final result for a team match, in classic match-play notation: scans
+// the holes in play order and reports the FIRST point the trailing team
+// could no longer catch up (even by winning every remaining hole) as
+// "X och Y" ("3 och 2" = won by 3 with 2 holes left) - the standard
+// shorthand for a match decided before the 18th hole. If it was never
+// clinched early, the match went the distance: "X upp", or tied.
+function describeTeamMatchResult(holeResults: HolePointsResult[], totalHoles: number, players: RoundPlayer[]): string {
+  let diff = 0;
+  for (let i = 0; i < holeResults.length; i++) {
+    const hr = holeResults[i];
+    if (!hr.complete || !hr.pointsByTeam) break;
+    diff += hr.pointsByTeam.A - hr.pointsByTeam.B;
+    const holesRemaining = totalHoles - (i + 1);
+    if (holesRemaining > 0 && Math.abs(diff) > holesRemaining) {
+      const leader: TeamId = diff > 0 ? 'A' : 'B';
+      return `${teamLabel(players, leader)} vinner, ${Math.abs(diff)} och ${holesRemaining}.`;
+    }
+  }
+
+  if (diff === 0) {
+    return 'Lika (A/S).';
+  }
+  const leader: TeamId = diff > 0 ? 'A' : 'B';
+  return `${teamLabel(players, leader)} vinner, ${Math.abs(diff)} upp.`;
+}
+
+export function describeRoundResult(
+  totals: RoundTotals,
+  holeResults: HolePointsResult[],
+  totalHoles: number,
+  players: RoundPlayer[],
+): string {
   if (totals.pointsByTeam && totals.winnerTeamIds) {
-    const { A, B } = totals.pointsByTeam;
-    if (totals.winnerTeamIds.length > 1) {
-      return `Oavgjort, ${A}–${B} poäng.`;
-    }
-    const winner = totals.winnerTeamIds[0];
-    if (winner === 'tie') {
-      return 'Rundan är klar.';
-    }
-    const loser: TeamId = winner === 'A' ? 'B' : 'A';
-    return `${teamLabel(players, winner)} vann med ${totals.pointsByTeam[winner]}–${totals.pointsByTeam[loser]} poäng.`;
+    return describeTeamMatchResult(holeResults, totalHoles, players);
   }
 
   if (totals.pointsByPlayer && totals.winnerPlayerIds) {

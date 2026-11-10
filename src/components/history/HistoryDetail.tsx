@@ -77,7 +77,7 @@ export function HistoryDetail({ roundId, onBack }: HistoryDetailProps) {
       <p className="history-detail__meta">
         {formatRoundDate(round.completedAt ?? round.startedAt)} · {format.label}
       </p>
-      <p className="history-detail__result">{describeRoundResult(result.totals, round.players)}</p>
+      <p className="history-detail__result">{describeRoundResult(result.totals, result.holeResults, course.holes, round.players)}</p>
 
       <ul className="history-detail__players">
         {round.players.map((player) => {

@@ -12,15 +12,19 @@ export function RoundSaved({ onStartNewRound }: RoundSavedProps) {
   const round = storage.roundsHistory[0];
   const course = round ? storage.courses.find((c) => c.id === round.courseId) : undefined;
 
+  const result = round && course ? computeRoundResult(round, course) : null;
+
   return (
     <div className="round-saved">
       <h2>Rundan sparad</h2>
-      {round && course ? (
+      {round && course && result ? (
         <>
           <p className="round-saved__course">
             {course.club} – {course.name}
           </p>
-          <p className="round-saved__result">{describeRoundResult(computeRoundResult(round, course).totals, round.players)}</p>
+          <p className="round-saved__result">
+            {describeRoundResult(result.totals, result.holeResults, course.holes, round.players)}
+          </p>
         </>
       ) : (
         <p>Rundan ligger nu i historiken.</p>

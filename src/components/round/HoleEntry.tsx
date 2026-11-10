@@ -67,7 +67,7 @@ export function HoleEntry({ onShowScorecard, onFinished, onAborted }: HoleEntryP
   }
 
   const handleFinish = () => {
-    const resultText = describeRoundResult(result.totals, round.players);
+    const resultText = describeRoundResult(result.totals, result.holeResults, course.holes, round.players);
     const confirmed = window.confirm(`${resultText}\n\nSpara rundan till historiken?`);
     if (!confirmed) return;
 
@@ -171,7 +171,7 @@ export function HoleEntry({ onShowScorecard, onFinished, onAborted }: HoleEntryP
 
       {allComplete && (
         <div className="hole-entry__finish-area">
-          <p className="hole-entry__final-result">{describeRoundResult(result.totals, round.players)}</p>
+          <p className="hole-entry__final-result">{describeRoundResult(result.totals, result.holeResults, course.holes, round.players)}</p>
           <button type="button" className="hole-entry__finish" onClick={handleFinish}>
             Spara och avsluta
           </button>

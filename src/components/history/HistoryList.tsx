@@ -20,7 +20,9 @@ export function HistoryList({ onOpenRound }: HistoryListProps) {
       {storage.roundsHistory.map((round) => {
         const course = storage.courses.find((c) => c.id === round.courseId);
         const format = getGameFormat(round.formatId);
-        const resultText = course ? describeRoundResult(computeRoundResult(round, course).totals, round.players) : '';
+        const result = course ? computeRoundResult(round, course) : null;
+        const resultText =
+          course && result ? describeRoundResult(result.totals, result.holeResults, course.holes, round.players) : '';
 
         return (
           <li key={round.id} className="history-list__item">

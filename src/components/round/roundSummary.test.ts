@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { RoundPlayer } from '../../domain/types';
+import type { HolePointsResult } from '../../engine/formats/types';
 import {
   describeMatchStatus,
   describePlayerStandings,
@@ -27,20 +28,36 @@ describe('teamLabel', () => {
   });
 });
 
+function teamHole(A: number, B: number): HolePointsResult {
+  return { hole: 1, complete: true, pointsByTeam: { A, B } };
+}
+
 describe('describeRoundResult', () => {
-  it('names the winning team and the point gap', () => {
-    const text = describeRoundResult({ pointsByTeam: { A: 10, B: 4 }, winnerTeamIds: ['A'] }, players);
-    expect(text).toBe('Lag A (Anna & Björn) vann med 10–4 poäng.');
+  it('reports "X och Y" once the trailing team is mathematically out of reach before the last hole', () => {
+    // After hole 2, A leads by 4 with 2 of 4 holes left - B can win both and
+    // still lose, so the match was decided right there.
+    const holeResults = [teamHole(2, 0), teamHole(2, 0), teamHole(0, 2), teamHole(0, 2)];
+    const text = describeRoundResult({ pointsByTeam: { A: 4, B: 4 }, winnerTeamIds: ['A', 'B'] }, holeResults, 4, players);
+    expect(text).toBe('Lag A (Anna & Björn) vinner, 4 och 2.');
   });
 
-  it('describes a tied total', () => {
-    const text = describeRoundResult({ pointsByTeam: { A: 7, B: 7 }, winnerTeamIds: ['A', 'B'] }, players);
-    expect(text).toBe('Oavgjort, 7–7 poäng.');
+  it('reports "X upp" when the match is only decided on the very last hole', () => {
+    const holeResults = [teamHole(1, 0), teamHole(0, 0), teamHole(0, 0), teamHole(1, 0)];
+    const text = describeRoundResult({ pointsByTeam: { A: 2, B: 0 }, winnerTeamIds: ['A'] }, holeResults, 4, players);
+    expect(text).toBe('Lag A (Anna & Björn) vinner, 2 upp.');
+  });
+
+  it('reports a tied team match as "Lika (A/S)"', () => {
+    const holeResults = [teamHole(1, 1), teamHole(0, 0)];
+    const text = describeRoundResult({ pointsByTeam: { A: 1, B: 1 }, winnerTeamIds: ['A', 'B'] }, holeResults, 2, players);
+    expect(text).toBe('Lika (A/S).');
   });
 
   it('names a single winning player (individual format)', () => {
     const text = describeRoundResult(
       { pointsByPlayer: { a: 10, b: 6, c: 4 }, winnerPlayerIds: ['a'] },
+      [],
+      18,
       threePlayers,
     );
     expect(text).toBe('Anna vann (Anna 10 – Björn 6 – Cecilia 4 poäng).');
@@ -49,6 +66,8 @@ describe('describeRoundResult', () => {
   it('describes a shared win among tied players (individual format)', () => {
     const text = describeRoundResult(
       { pointsByPlayer: { a: 8, b: 8, c: 4 }, winnerPlayerIds: ['a', 'b'] },
+      [],
+      18,
       threePlayers,
     );
     expect(text).toBe('Delad seger: Anna & Björn (Anna 8 – Björn 8 – Cecilia 4 poäng).');
