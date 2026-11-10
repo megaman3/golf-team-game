@@ -11,13 +11,21 @@ const theNationalLogo = firstMatch(
   import.meta.glob('/src/pictures/TheNational/logo_*.{png,jpg,jpeg}', { eager: true, import: 'default' }),
 );
 
-// Add a mapping here once a course exists for a club whose logo has been
-// uploaded (e.g. Örestad has a logo but no course data yet).
+const orestadLogo = firstMatch(
+  import.meta.glob('/src/pictures/Örestad/logo_*.{png,jpg,jpeg}', { eager: true, import: 'default' }),
+);
+
 const COURSE_LOGOS: Record<string, string | undefined> = {
   'barseback-ocean': barsebackLogo,
   'barseback-pine': barsebackLogo,
   'the-national-links': theNationalLogo,
   'the-national-lakes': theNationalLogo,
+  'orestad-rod-bla': orestadLogo,
+  'orestad-rod-gul': orestadLogo,
+  'orestad-gul-bla': orestadLogo,
+  'orestad-gul-rod': orestadLogo,
+  'orestad-bla-rod': orestadLogo,
+  'orestad-bla-gul': orestadLogo,
 };
 
 export function getCourseLogo(courseId: string): string | null {

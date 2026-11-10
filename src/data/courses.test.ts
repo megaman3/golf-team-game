@@ -2,12 +2,18 @@ import { describe, expect, it } from 'vitest';
 import { seedCourses, validateCourseShape } from './courses';
 
 describe('seed courses', () => {
-  it('includes both Barsebäck courses and both The National courses', () => {
+  it('includes both Barsebäck courses, both The National courses, and all six Örestad combinations', () => {
     expect(seedCourses.map((c) => c.id)).toEqual([
       'barseback-ocean',
       'barseback-pine',
       'the-national-links',
       'the-national-lakes',
+      'orestad-rod-bla',
+      'orestad-rod-gul',
+      'orestad-gul-bla',
+      'orestad-gul-rod',
+      'orestad-bla-rod',
+      'orestad-bla-gul',
     ]);
   });
 
@@ -21,6 +27,12 @@ describe('seed courses', () => {
       'barseback-pine': 71,
       'the-national-links': 72,
       'the-national-lakes': 72,
+      'orestad-rod-bla': 72,
+      'orestad-rod-gul': 71,
+      'orestad-gul-bla': 71,
+      'orestad-gul-rod': 71,
+      'orestad-bla-rod': 72,
+      'orestad-bla-gul': 71,
     };
     for (const course of seedCourses) {
       expect(course.par.reduce((sum, par) => sum + par, 0)).toBe(parByCourseId[course.id]);
@@ -41,6 +53,31 @@ describe('seed courses', () => {
   it('The National Lakes course is labeled by its own seven course-length tees', () => {
     const lakes = seedCourses.find((c) => c.id === 'the-national-lakes')!;
     expect(lakes.tees.map((t) => t.id).sort()).toEqual(['48', '51', '54', '59', '62', '65', '68']);
+  });
+
+  it('Örestad courses use the club\'s standard vit/gul/bla/rod tees', () => {
+    for (const course of seedCourses.filter((c) => c.club === 'Örestads Golfklubb')) {
+      expect(course.tees.map((t) => t.id).sort()).toEqual(['bla', 'gul', 'rod', 'vit']);
+    }
+  });
+
+  it('Örestad\'s slope/course rating per tee is the same regardless of which nine is played first', () => {
+    const pairs: Array<[string, string]> = [
+      ['orestad-rod-gul', 'orestad-gul-rod'],
+      ['orestad-rod-bla', 'orestad-bla-rod'],
+      ['orestad-gul-bla', 'orestad-bla-gul'],
+    ];
+    for (const [idA, idB] of pairs) {
+      const courseA = seedCourses.find((c) => c.id === idA)!;
+      const courseB = seedCourses.find((c) => c.id === idB)!;
+      for (const teeA of courseA.tees) {
+        const teeB = courseB.tees.find((t) => t.id === teeA.id)!;
+        expect(teeB.slope).toBe(teeA.slope);
+        expect(teeB.courseRating).toBe(teeA.courseRating);
+      }
+      // But the two orderings are not just duplicates - the hole index differs.
+      expect(courseA.index).not.toEqual(courseB.index);
+    }
   });
 
   it('every tee has a plausible slope (55-155) and course rating (50-90) when set', () => {
