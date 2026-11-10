@@ -1,4 +1,4 @@
-import type { Course, Round, TeamId } from '../domain/types';
+import type { Course, Round, RoundPlayer, TeamId } from '../domain/types';
 import { computeRoundResult } from './roundResult';
 import { getGameFormat } from './formats/registry';
 
@@ -44,6 +44,38 @@ function withinRange(iso: string, from?: string, to?: string): boolean {
   return true;
 }
 
+function creditPlayer(byPlayer: Map<string, PlayerTotal>, player: RoundPlayer, points: number, won: boolean): void {
+  const existing = byPlayer.get(player.playerId) ?? {
+    playerId: player.playerId,
+    name: player.name,
+    points: 0,
+    wins: 0,
+    roundsPlayed: 0,
+  };
+  existing.name = player.name;
+  existing.points += points;
+  existing.wins += won ? 1 : 0;
+  existing.roundsPlayed += 1;
+  byPlayer.set(player.playerId, existing);
+}
+
+function creditPair(byPair: Map<string, PairTotal>, pair: RoundPlayer[], points: number, won: boolean): void {
+  const sorted = [...pair].sort((a, b) => a.playerId.localeCompare(b.playerId));
+  const key = sorted.map((p) => p.playerId).join('+');
+  const existing = byPair.get(key) ?? {
+    playerIds: [sorted[0].playerId, sorted[1].playerId],
+    names: [sorted[0].name, sorted[1].name],
+    points: 0,
+    wins: 0,
+    roundsPlayed: 0,
+  };
+  existing.names = [sorted[0].name, sorted[1].name];
+  existing.points += points;
+  existing.wins += won ? 1 : 0;
+  existing.roundsPlayed += 1;
+  byPair.set(key, existing);
+}
+
 export function computeTotals(rounds: Round[], courses: Course[], filter: TotalsFilter = {}): Totals {
   const byPlayer = new Map<string, PlayerTotal>();
   const byPair = new Map<string, PairTotal>();
@@ -59,44 +91,31 @@ export function computeTotals(rounds: Round[], courses: Course[], filter: Totals
 
     const format = getGameFormat(round.formatId);
     const result = computeRoundResult(round, course);
-    const { pointsByTeam, winnerTeamIds } = result.totals;
-    if (!format.usesTeams || !pointsByTeam || !winnerTeamIds) continue;
 
-    for (const team of TEAM_IDS) {
-      const teamPlayers = round.players.filter((p) => p.teamId === team);
-      const points = pointsByTeam[team];
-      const won = winnerTeamIds.includes(team);
+    if (format.usesTeams) {
+      const { pointsByTeam, winnerTeamIds } = result.totals;
+      if (!pointsByTeam || !winnerTeamIds) continue;
 
-      for (const player of teamPlayers) {
-        const existing = byPlayer.get(player.playerId) ?? {
-          playerId: player.playerId,
-          name: player.name,
-          points: 0,
-          wins: 0,
-          roundsPlayed: 0,
-        };
-        existing.name = player.name;
-        existing.points += points;
-        existing.wins += won ? 1 : 0;
-        existing.roundsPlayed += 1;
-        byPlayer.set(player.playerId, existing);
+      for (const team of TEAM_IDS) {
+        const teamPlayers = round.players.filter((p) => p.teamId === team);
+        const points = pointsByTeam[team];
+        const won = winnerTeamIds.includes(team);
+
+        for (const player of teamPlayers) {
+          creditPlayer(byPlayer, player, points, won);
+        }
+        if (teamPlayers.length === 2) {
+          creditPair(byPair, teamPlayers, points, won);
+        }
       }
+    } else {
+      const { pointsByPlayer, winnerPlayerIds } = result.totals;
+      if (!pointsByPlayer || !winnerPlayerIds) continue;
 
-      if (teamPlayers.length === 2) {
-        const sorted = [...teamPlayers].sort((a, b) => a.playerId.localeCompare(b.playerId));
-        const key = sorted.map((p) => p.playerId).join('+');
-        const existing = byPair.get(key) ?? {
-          playerIds: [sorted[0].playerId, sorted[1].playerId],
-          names: [sorted[0].name, sorted[1].name],
-          points: 0,
-          wins: 0,
-          roundsPlayed: 0,
-        };
-        existing.names = [sorted[0].name, sorted[1].name];
-        existing.points += points;
-        existing.wins += won ? 1 : 0;
-        existing.roundsPlayed += 1;
-        byPair.set(key, existing);
+      for (const player of round.players) {
+        const points = pointsByPlayer[player.playerId] ?? 0;
+        const won = winnerPlayerIds.includes(player.playerId);
+        creditPlayer(byPlayer, player, points, won);
       }
     }
   }

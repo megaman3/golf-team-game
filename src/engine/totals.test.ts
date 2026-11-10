@@ -36,6 +36,28 @@ function round(overrides: Partial<Round> & { id: string }): Round {
   };
 }
 
+function copenhagenRound(overrides: Partial<Round> & { id: string }): Round {
+  return {
+    courseId: course.id,
+    formatId: 'copenhagen',
+    scratch: true,
+    players: [
+      { playerId: 'anna', name: 'Anna', exactHandicapUsed: null, teeId: 'white' },
+      { playerId: 'bjorn', name: 'Björn', exactHandicapUsed: null, teeId: 'white' },
+      { playerId: 'cecilia', name: 'Cecilia', exactHandicapUsed: null, teeId: 'white' },
+    ],
+    holeScores: [
+      { hole: 1, strokesByPlayer: { anna: 3, bjorn: 4, cecilia: 5 } }, // anna4 bjorn2 cecilia0
+      { hole: 2, strokesByPlayer: { anna: 4, bjorn: 4, cecilia: 4 } }, // 2-2-2
+    ],
+    settings: {},
+    status: 'completed',
+    startedAt: '2026-05-01T10:00:00.000Z',
+    completedAt: '2026-05-01T13:00:00.000Z',
+    ...overrides,
+  };
+}
+
 describe('computeTotals', () => {
   it('credits each player with their team\'s points and win for the round', () => {
     const totals = computeTotals([round({ id: 'r1' })], [course]);
@@ -97,5 +119,19 @@ describe('computeTotals', () => {
   it('ignores a round whose course can no longer be found', () => {
     const totals = computeTotals([round({ id: 'r1', courseId: 'missing' })], [course]);
     expect(totals.byPlayer).toEqual([]);
+  });
+
+  it('credits individual players for a Köpenhamare round, with no pair aggregation', () => {
+    const totals = computeTotals([copenhagenRound({ id: 'cr1' })], [course]);
+
+    const anna = totals.byPlayer.find((p) => p.playerId === 'anna')!;
+    const bjorn = totals.byPlayer.find((p) => p.playerId === 'bjorn')!;
+    const cecilia = totals.byPlayer.find((p) => p.playerId === 'cecilia')!;
+    expect(anna.points).toBe(6); // 4 + 2
+    expect(bjorn.points).toBe(4); // 2 + 2
+    expect(cecilia.points).toBe(2); // 0 + 2
+    expect(anna.wins).toBe(1);
+    expect(bjorn.wins).toBe(0);
+    expect(totals.byPair).toEqual([]);
   });
 });
