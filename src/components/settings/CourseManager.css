@@ -70,3 +70,62 @@
   color: var(--color-primary-contrast);
   cursor: pointer;
 }
+
+.course-manager__tees {
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.course-manager__tees legend {
+  color: var(--color-text-muted);
+  padding: 0 4px;
+}
+
+.course-manager__tee-row {
+  display: flex;
+  gap: 6px;
+}
+
+.course-manager__tee-row input:first-child {
+  flex: 2;
+  min-width: 0;
+}
+
+.course-manager__tee-row input:not(:first-child) {
+  flex: 1;
+  min-width: 0;
+}
+
+.course-manager__tee-row input {
+  font-size: 14px;
+  padding: 8px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.course-manager__remove-tee {
+  flex-shrink: 0;
+  width: 32px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.course-manager__add-tee {
+  align-self: flex-start;
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 13px;
+  cursor: pointer;
+}

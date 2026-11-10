@@ -74,7 +74,7 @@ export function PlayerSetup({ playerCount, usesTeams, players, rosterNames, tees
             {selectedTee && (
               <p className="player-setup__tee-info">
                 {selectedTee.slope != null && selectedTee.courseRating != null
-                  ? `Slope ${selectedTee.slope} · Course rating ${selectedTee.courseRating}`
+                  ? `Slope ${selectedTee.slope} · Course rating ${selectedTee.courseRating} (herrar)`
                   : 'Slope/course rating saknas - handicap räknas med enkel avrundning'}
               </p>
             )}

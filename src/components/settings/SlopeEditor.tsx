@@ -23,7 +23,8 @@ export function SlopeEditor() {
       <h3>Slope &amp; course rating</h3>
       <p className="slope-editor__hint">
         Rätta ett värde om det är fel - ändringen sparas permanent och används direkt i handicapberäkningen.
-        Lämna tomt om du inte vill använda den exakta formeln för en tee.
+        Lämna tomt om du inte vill använda den exakta formeln för en tee. Värdena avser <strong>herrarnas</strong>
+        slope/course rating (appen har inget könsfält för spelare ännu).
       </p>
 
       {storage.courses.map((course) => (

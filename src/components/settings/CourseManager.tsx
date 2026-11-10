@@ -8,20 +8,22 @@ import './CourseManager.css';
 
 const seedCourseIds = new Set(seedCourses.map((c) => c.id));
 
+interface DraftTee {
+  label: string;
+  slope: string;
+  courseRating: string;
+}
+
+function emptyDraftTee(): DraftTee {
+  return { label: '', slope: '', courseRating: '' };
+}
+
 function parseNumberList(input: string): number[] {
   return input
     .split(',')
     .map((part) => part.trim())
     .filter((part) => part.length > 0)
     .map(Number);
-}
-
-function parseTees(input: string): Tee[] {
-  return input
-    .split(',')
-    .map((part) => part.trim())
-    .filter((part) => part.length > 0)
-    .map((label) => ({ id: label.toLowerCase().replace(/\s+/g, '-'), label }));
 }
 
 export function CourseManager() {
@@ -31,12 +33,53 @@ export function CourseManager() {
   const [holes, setHoles] = useState('18');
   const [par, setPar] = useState('');
   const [index, setIndex] = useState('');
-  const [tees, setTees] = useState('');
+  const [teeRows, setTeeRows] = useState<DraftTee[]>([emptyDraftTee()]);
   const [error, setError] = useState<string | null>(null);
+
+  function updateTeeRow(rowIndex: number, patch: Partial<DraftTee>) {
+    setTeeRows((current) => current.map((row, i) => (i === rowIndex ? { ...row, ...patch } : row)));
+  }
+
+  function addTeeRow() {
+    setTeeRows((current) => [...current, emptyDraftTee()]);
+  }
+
+  function removeTeeRow(rowIndex: number) {
+    setTeeRows((current) => current.filter((_, i) => i !== rowIndex));
+  }
+
+  function buildTees(): Tee[] | null {
+    const tees: Tee[] = [];
+    for (const row of teeRows) {
+      if (row.label.trim() === '') continue;
+
+      const tee: Tee = { id: row.label.trim().toLowerCase().replace(/\s+/g, '-'), label: row.label.trim() };
+
+      if (row.slope.trim() !== '') {
+        const slope = Number(row.slope);
+        if (Number.isNaN(slope)) return null;
+        tee.slope = slope;
+      }
+      if (row.courseRating.trim() !== '') {
+        const courseRating = Number(row.courseRating);
+        if (Number.isNaN(courseRating)) return null;
+        tee.courseRating = courseRating;
+      }
+
+      tees.push(tee);
+    }
+    return tees;
+  }
 
   function handleAdd() {
     if (!club.trim() || !name.trim()) {
       setError('Ange klubb och bana.');
+      return;
+    }
+
+    const tees = buildTees();
+    if (tees == null) {
+      setError('Slope och course rating måste vara tal (eller lämnas tomma).');
       return;
     }
 
@@ -47,7 +90,7 @@ export function CourseManager() {
       holes: Number(holes),
       par: parseNumberList(par),
       index: parseNumberList(index),
-      tees: parseTees(tees),
+      tees,
     };
 
     const problems = validateCourseShape(course);
@@ -62,7 +105,7 @@ export function CourseManager() {
     setHoles('18');
     setPar('');
     setIndex('');
-    setTees('');
+    setTeeRows([emptyDraftTee()]);
     setError(null);
   }
 
@@ -98,10 +141,6 @@ export function CourseManager() {
       </ul>
 
       <h4>Lägg till bana</h4>
-      <p className="course-manager__hint">
-        Slope och course rating kan inte matas in här ännu - lägg till en bana utan dem och komplettera senare i
-        koddatan om du behöver den exakta formeln.
-      </p>
       {error && <p className="course-manager__error">{error}</p>}
       <div className="course-manager__form">
         <label className="field">
@@ -124,10 +163,49 @@ export function CourseManager() {
           <span>Index per hål (kommaseparerat)</span>
           <input type="text" placeholder="7,13,1,…" value={index} onChange={(e) => setIndex(e.target.value)} />
         </label>
-        <label className="field">
-          <span>Tees (kommaseparerade namn)</span>
-          <input type="text" placeholder="Blå, Röd, Vit, Gul" value={tees} onChange={(e) => setTees(e.target.value)} />
-        </label>
+
+        <fieldset className="course-manager__tees">
+          <legend>Tees</legend>
+          <p className="course-manager__hint">
+            Slope och course rating är valfria - lämna tomt om du inte har de exakta värdena än. Avser herrarnas
+            värden (appen har inget könsfält för spelare ännu).
+          </p>
+          {teeRows.map((row, rowIndex) => (
+            <div className="course-manager__tee-row" key={rowIndex}>
+              <input
+                type="text"
+                placeholder="Namn, t.ex. Blå"
+                value={row.label}
+                onChange={(e) => updateTeeRow(rowIndex, { label: e.target.value })}
+              />
+              <input
+                type="number"
+                placeholder="Slope"
+                value={row.slope}
+                onChange={(e) => updateTeeRow(rowIndex, { slope: e.target.value })}
+              />
+              <input
+                type="number"
+                step="0.1"
+                placeholder="Course rating"
+                value={row.courseRating}
+                onChange={(e) => updateTeeRow(rowIndex, { courseRating: e.target.value })}
+              />
+              <button
+                type="button"
+                className="course-manager__remove-tee"
+                onClick={() => removeTeeRow(rowIndex)}
+                aria-label="Ta bort tee"
+              >
+                ×
+              </button>
+            </div>
+          ))}
+          <button type="button" className="course-manager__add-tee" onClick={addTeeRow}>
+            + Lägg till tee
+          </button>
+        </fieldset>
+
         <button type="button" className="course-manager__add" onClick={handleAdd}>
           Lägg till bana
         </button>
