@@ -4,6 +4,7 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/golf-team-game/',
   plugins: [
     react(),
     VitePWA({
@@ -14,8 +15,8 @@ export default defineConfig({
         short_name: 'Golfpoäng',
         description: 'Räkna poäng för bästboll/sämstboll och Köpenhamare på golfbanan.',
         lang: 'sv',
-        start_url: '/',
-        scope: '/',
+        start_url: '/golf-team-game/',
+        scope: '/golf-team-game/',
         display: 'standalone',
         background_color: '#1f6f43',
         theme_color: '#1f6f43',
