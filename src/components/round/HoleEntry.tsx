@@ -6,8 +6,15 @@ import { computeHandicapStrokes } from '../../engine/handicap';
 import { computeRoundResult } from '../../engine/roundResult';
 import type { HolePointsResult, RoundTotals } from '../../engine/formats/types';
 import { getGameFormat } from '../../engine/formats/registry';
-import { completeRound } from '../../storage/roundRepository';
-import { describeMatchStatus, describeRoundResult, describeWinner, teamLabel } from './roundSummary';
+import { completeRound, discardInProgressRound } from '../../storage/roundRepository';
+import {
+  describeMatchStatus,
+  describePlayerStandings,
+  describeRoundResult,
+  describeStandingsGap,
+  describeWinner,
+  teamLabel,
+} from './roundSummary';
 import './HoleEntry.css';
 
 interface BestBallWorstBallDetail {
@@ -18,9 +25,10 @@ interface BestBallWorstBallDetail {
 interface HoleEntryProps {
   onShowScorecard: () => void;
   onFinished: () => void;
+  onAborted: () => void;
 }
 
-export function HoleEntry({ onShowScorecard, onFinished }: HoleEntryProps) {
+export function HoleEntry({ onShowScorecard, onFinished, onAborted }: HoleEntryProps) {
   const { storage, update } = useStorage();
   const round = storage.inProgressRound;
   const course = round ? storage.courses.find((c) => c.id === round.courseId) : undefined;
@@ -68,6 +76,16 @@ export function HoleEntry({ onShowScorecard, onFinished }: HoleEntryProps) {
       return completeRound(current, current.inProgressRound);
     });
     onFinished();
+  };
+
+  const handleAbort = () => {
+    const confirmed = window.confirm(
+      'Vill du verkligen avbryta? Rundan avslutas innan ni spelat färdigt och all inmatad data för den här rundan försvinner.',
+    );
+    if (!confirmed) return;
+
+    update((current) => discardInProgressRound(current));
+    onAborted();
   };
 
   return (
@@ -142,12 +160,13 @@ export function HoleEntry({ onShowScorecard, onFinished }: HoleEntryProps) {
         })}
       </ul>
 
-      <HoleResultSummary result={currentHoleResult} players={round.players} />
+      <HoleResultSummary result={currentHoleResult} players={round.players} usesTeams={format.usesTeams} />
       <RoundStandings
         totals={result.totals}
         players={round.players}
         holesPlayed={result.holeResults.filter((h) => h.complete).length}
         totalHoles={course.holes}
+        usesTeams={format.usesTeams}
       />
 
       {allComplete && (
@@ -158,13 +177,33 @@ export function HoleEntry({ onShowScorecard, onFinished }: HoleEntryProps) {
           </button>
         </div>
       )}
+
+      <button type="button" className="hole-entry__abort" onClick={handleAbort}>
+        Avbryt rundan
+      </button>
     </div>
   );
 }
 
-function HoleResultSummary({ result, players }: { result: HolePointsResult; players: RoundPlayer[] }) {
+function HoleResultSummary({
+  result,
+  players,
+  usesTeams,
+}: {
+  result: HolePointsResult;
+  players: RoundPlayer[];
+  usesTeams: boolean;
+}) {
   if (!result.complete) {
     return <p className="hole-entry__summary">Väntar på alla slag på hålet…</p>;
+  }
+
+  if (!usesTeams) {
+    return (
+      <div className="hole-entry__summary">
+        <p>Poäng hålet: {describePlayerStandings(result.pointsByPlayer, players)}</p>
+      </div>
+    );
   }
 
   const detail = result.detail as BestBallWorstBallDetail | undefined;
@@ -192,12 +231,25 @@ function RoundStandings({
   players,
   holesPlayed,
   totalHoles,
+  usesTeams,
 }: {
   totals: RoundTotals;
   players: RoundPlayer[];
   holesPlayed: number;
   totalHoles: number;
+  usesTeams: boolean;
 }) {
+  if (!usesTeams) {
+    if (!totals.pointsByPlayer) return null;
+    return (
+      <div className="hole-entry__standings">
+        <h3>Ställning</h3>
+        <p>{describePlayerStandings(totals.pointsByPlayer, players)}</p>
+        <p className="hole-entry__match-status">Skillnad: {describeStandingsGap(totals.pointsByPlayer, players)}</p>
+      </div>
+    );
+  }
+
   if (!totals.pointsByTeam) return null;
 
   return (

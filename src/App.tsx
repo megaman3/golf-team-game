@@ -21,7 +21,13 @@ function RundaTab() {
     if (view === 'scorecard') {
       return <Scorecard onSelectHole={() => setView('entry')} />;
     }
-    return <HoleEntry onShowScorecard={() => setView('scorecard')} onFinished={() => setView('saved')} />;
+    return (
+      <HoleEntry
+        onShowScorecard={() => setView('scorecard')}
+        onFinished={() => setView('saved')}
+        onAborted={() => setView('entry')}
+      />
+    );
   }
 
   if (view === 'saved') {

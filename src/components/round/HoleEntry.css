@@ -171,3 +171,14 @@
   color: var(--color-primary-contrast);
   cursor: pointer;
 }
+
+.hole-entry__abort {
+  margin-top: 4px;
+  padding: 10px;
+  font-size: 13px;
+  border: 1px solid #b3261e;
+  border-radius: 8px;
+  background: transparent;
+  color: #b3261e;
+  cursor: pointer;
+}
