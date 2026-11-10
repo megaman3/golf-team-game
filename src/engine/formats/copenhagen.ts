@@ -1,5 +1,6 @@
 import type { RoundPlayer } from '../../domain/types';
-import type { GameFormatModule, HolePointsResult, HoleStrokeInput, RoundTotals } from './types';
+import { aggregateIndividualPoints } from './individualTotals';
+import type { GameFormatModule, HolePointsResult, HoleStrokeInput } from './types';
 
 export type CopenhagenSettings = Record<string, never>;
 
@@ -46,28 +47,6 @@ function computeHolePoints(
   return { hole: input.hole, complete: true, pointsByPlayer };
 }
 
-function computeRoundTotals(holeResults: HolePointsResult[]): RoundTotals {
-  const pointsByPlayer: Record<string, number> = {};
-  for (const result of holeResults) {
-    if (!result.complete || !result.pointsByPlayer) continue;
-    for (const [playerId, points] of Object.entries(result.pointsByPlayer)) {
-      pointsByPlayer[playerId] = (pointsByPlayer[playerId] ?? 0) + points;
-    }
-  }
-
-  const values = Object.values(pointsByPlayer);
-  if (values.length === 0) {
-    return { pointsByPlayer, winnerPlayerIds: [] };
-  }
-
-  const maxPoints = Math.max(...values);
-  const winnerPlayerIds = Object.entries(pointsByPlayer)
-    .filter(([, points]) => points === maxPoints)
-    .map(([playerId]) => playerId);
-
-  return { pointsByPlayer, winnerPlayerIds };
-}
-
 export const copenhagen: GameFormatModule<CopenhagenSettings> = {
   id: 'copenhagen',
   label: 'Köpenhamare',
@@ -75,5 +54,5 @@ export const copenhagen: GameFormatModule<CopenhagenSettings> = {
   usesTeams: false,
   defaultSettings: defaultCopenhagenSettings,
   computeHolePoints,
-  computeRoundTotals,
+  computeRoundTotals: (holeResults) => aggregateIndividualPoints(holeResults),
 };

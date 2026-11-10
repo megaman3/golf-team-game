@@ -29,7 +29,13 @@ export interface RoundTotals {
 export interface GameFormatModule<TSettings> {
   id: string;
   label: string;
+  // Default/initial number of player slots shown in setup.
   playerCount: number;
+  // When set, the format allows a variable number of players between these
+  // two (inclusive) - setup shows add/remove controls instead of a fixed
+  // number of slots. Omitted for formats with an exact player count.
+  minPlayers?: number;
+  maxPlayers?: number;
   usesTeams: boolean;
   defaultSettings: TSettings;
   computeHolePoints(
