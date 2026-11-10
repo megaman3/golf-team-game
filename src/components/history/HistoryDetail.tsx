@@ -8,6 +8,7 @@ import { handicapStrokesForPlayerOnHole } from '../../engine/handicap';
 import { deleteRoundFromHistory, updateRoundInHistory } from '../../storage/roundRepository';
 import { describeRoundResult, formatRoundDate } from '../round/roundSummary';
 import { RoundCharts } from '../round/RoundCharts';
+import { ScoreLegend } from '../round/ScoreLegend';
 import { scoreCellClassName } from '../round/scoreCellClass';
 import './HistoryDetail.css';
 
@@ -234,6 +235,7 @@ export function HistoryDetail({ roundId, onBack }: HistoryDetailProps) {
           </tbody>
         </table>
       </div>
+      <ScoreLegend />
 
       <RoundCharts holeResults={result.holeResults} players={round.players} usesTeams={format.usesTeams} />
     </div>

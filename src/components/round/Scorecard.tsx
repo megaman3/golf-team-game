@@ -6,6 +6,7 @@ import { handicapStrokesForPlayerOnHole } from '../../engine/handicap';
 import { CourseBackground } from '../common/CourseBackground';
 import { getCourseBackgroundImage } from '../../data/courseImages';
 import { RoundCharts } from './RoundCharts';
+import { ScoreLegend } from './ScoreLegend';
 import { scoreCellClassName } from './scoreCellClass';
 import './Scorecard.css';
 
@@ -167,6 +168,7 @@ export function Scorecard({ onSelectHole }: ScorecardProps) {
           </tbody>
         </table>
       </div>
+      <ScoreLegend />
 
       <RoundCharts holeResults={result.holeResults} players={round.players} usesTeams={format.usesTeams} />
     </div>
