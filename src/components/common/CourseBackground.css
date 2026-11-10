@@ -1,0 +1,12 @@
+.course-background {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  margin: -16px;
+}
+
+.course-background__scrim {
+  background: var(--color-bg-scrim);
+  min-height: 70vh;
+  padding: 16px;
+}

@@ -2,6 +2,7 @@ import { useStorage } from '../../StorageContext';
 import { setCurrentHole } from '../../domain/roundEditing';
 import { computeRoundResult } from '../../engine/roundResult';
 import { getGameFormat } from '../../engine/formats/registry';
+import { CourseBackground } from '../common/CourseBackground';
 import { RoundCharts } from './RoundCharts';
 import './Scorecard.css';
 
@@ -57,6 +58,7 @@ export function Scorecard({ onSelectHole }: ScorecardProps) {
   }
 
   return (
+    <CourseBackground courseId={course.id} seed={round.id}>
     <div className="scorecard">
       <div className="scorecard__header">
         <h2>Scorekort</h2>
@@ -160,5 +162,6 @@ export function Scorecard({ onSelectHole }: ScorecardProps) {
 
       <RoundCharts holeResults={result.holeResults} players={round.players} usesTeams={format.usesTeams} />
     </div>
+    </CourseBackground>
   );
 }
