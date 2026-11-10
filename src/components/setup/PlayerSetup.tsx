@@ -1,4 +1,5 @@
 import type { TeamId, Tee } from '../../domain/types';
+import { DEFAULT_HANDICAP } from './defaultTee';
 
 export interface DraftPlayer {
   name: string;
@@ -8,17 +9,40 @@ export interface DraftPlayer {
 }
 
 interface PlayerSetupProps {
-  playerCount: number;
   usesTeams: boolean;
   players: DraftPlayer[];
   rosterNames: string[];
   tees: Tee[];
   onChange: (players: DraftPlayer[]) => void;
+  defaultTeeId: string;
+  // When both are set, the number of player rows becomes adjustable
+  // between them instead of fixed to players.length.
+  minPlayers?: number;
+  maxPlayers?: number;
 }
 
-export function PlayerSetup({ playerCount, usesTeams, players, rosterNames, tees, onChange }: PlayerSetupProps) {
+export function PlayerSetup({
+  usesTeams,
+  players,
+  rosterNames,
+  tees,
+  onChange,
+  defaultTeeId,
+  minPlayers,
+  maxPlayers,
+}: PlayerSetupProps) {
+  const variableCount = minPlayers != null && maxPlayers != null;
+
   function updatePlayer(index: number, patch: Partial<DraftPlayer>) {
     onChange(players.map((player, i) => (i === index ? { ...player, ...patch } : player)));
+  }
+
+  function addPlayer() {
+    onChange([...players, { name: '', handicap: DEFAULT_HANDICAP, team: 'A', teeId: defaultTeeId }]);
+  }
+
+  function removePlayer(index: number) {
+    onChange(players.filter((_, i) => i !== index));
   }
 
   return (
@@ -29,8 +53,7 @@ export function PlayerSetup({ playerCount, usesTeams, players, rosterNames, tees
           <option key={name} value={name} />
         ))}
       </datalist>
-      {Array.from({ length: playerCount }, (_, index) => {
-        const player = players[index];
+      {players.map((player, index) => {
         const selectedTee = tees.find((t) => t.id === player.teeId);
         return (
           <div className="player-setup__entry" key={index}>
@@ -70,6 +93,16 @@ export function PlayerSetup({ playerCount, usesTeams, players, rosterNames, tees
                   <option value="B">Lag B</option>
                 </select>
               )}
+              {variableCount && players.length > (minPlayers ?? 1) && (
+                <button
+                  type="button"
+                  className="player-setup__remove"
+                  onClick={() => removePlayer(index)}
+                  aria-label={`Ta bort spelare ${index + 1}`}
+                >
+                  ×
+                </button>
+              )}
             </div>
             {selectedTee && (
               <p className="player-setup__tee-info">
@@ -81,6 +114,11 @@ export function PlayerSetup({ playerCount, usesTeams, players, rosterNames, tees
           </div>
         );
       })}
+      {variableCount && players.length < (maxPlayers ?? players.length) && (
+        <button type="button" className="player-setup__add" onClick={addPlayer}>
+          + Lägg till spelare
+        </button>
+      )}
     </fieldset>
   );
 }

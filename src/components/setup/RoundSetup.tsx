@@ -11,10 +11,8 @@ import { CourseSelect } from './CourseSelect';
 import { FormatSelect } from './FormatSelect';
 import { PlayerSetup, type DraftPlayer } from './PlayerSetup';
 import { FormatSettingsForm } from './FormatSettingsForm';
-import { pickDefaultTeeId } from './defaultTee';
+import { pickDefaultTeeId, DEFAULT_HANDICAP } from './defaultTee';
 import './RoundSetup.css';
-
-const DEFAULT_HANDICAP = '10';
 
 function emptyDraftPlayers(count: number, defaultTeeId: string): DraftPlayer[] {
   return Array.from({ length: count }, (_, i) => ({
@@ -139,12 +137,14 @@ export function RoundSetup() {
       </label>
 
       <PlayerSetup
-        playerCount={format.playerCount}
         usesTeams={format.usesTeams}
         players={players}
         rosterNames={storage.players.map((p) => p.name)}
         tees={course?.tees ?? []}
         onChange={setPlayers}
+        defaultTeeId={pickDefaultTeeId(course?.tees ?? [])}
+        minPlayers={format.minPlayers}
+        maxPlayers={format.maxPlayers}
       />
 
       {formatId === bestBallWorstBall.id && (

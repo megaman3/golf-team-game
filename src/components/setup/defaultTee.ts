@@ -1,5 +1,7 @@
 import type { Tee } from '../../domain/types';
 
+export const DEFAULT_HANDICAP = '10';
+
 const DEFAULT_LENGTH_TEE_TARGET = 57;
 
 // Picks a sensible starting tee: "gult" for the classic color tees, or
