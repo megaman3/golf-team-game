@@ -10,6 +10,10 @@ const orestadImages = Object.values(
   import.meta.glob('/src/pictures/Örestad/*.jpeg', { eager: true, import: 'default' }),
 ) as string[];
 
+const falsterboImages = Object.values(
+  import.meta.glob('/src/pictures/Falsterbo/*.jpeg', { eager: true, import: 'default' }),
+) as string[];
+
 const COURSE_IMAGES: Record<string, string[]> = {
   'barseback-ocean': barsebackImages,
   'barseback-pine': barsebackImages,
@@ -21,6 +25,7 @@ const COURSE_IMAGES: Record<string, string[]> = {
   'orestad-gul-rod': orestadImages,
   'orestad-bla-rod': orestadImages,
   'orestad-bla-gul': orestadImages,
+  falsterbo: falsterboImages,
 };
 
 function hashString(input: string): number {
