@@ -1,8 +1,10 @@
+import { useState } from 'react';
 import { useStorage } from '../../StorageContext';
 import type { TeamId } from '../../domain/types';
+import { setPlayerStroke } from '../../domain/roundEditing';
 import { computeRoundResult } from '../../engine/roundResult';
 import { getGameFormat } from '../../engine/formats/registry';
-import { deleteRoundFromHistory } from '../../storage/roundRepository';
+import { deleteRoundFromHistory, updateRoundInHistory } from '../../storage/roundRepository';
 import { describeRoundResult, formatRoundDate } from '../round/roundSummary';
 import { RoundCharts } from '../round/RoundCharts';
 import './HistoryDetail.css';
@@ -18,6 +20,7 @@ function sum(values: number[]): number {
 
 export function HistoryDetail({ roundId, onBack }: HistoryDetailProps) {
   const { storage, update } = useStorage();
+  const [editing, setEditing] = useState(false);
   const round = storage.roundsHistory.find((r) => r.id === roundId);
   const course = round ? storage.courses.find((c) => c.id === round.courseId) : undefined;
 
@@ -60,16 +63,28 @@ export function HistoryDetail({ roundId, onBack }: HistoryDetailProps) {
     onBack();
   };
 
+  const handleStrokeChange = (playerId: string, hole: number, value: string) => {
+    if (value !== '' && Number.isNaN(Number(value))) return;
+    const strokes = value === '' ? null : Number(value);
+    update((current) => updateRoundInHistory(current, round.id, (r) => setPlayerStroke(r, hole, playerId, strokes)));
+  };
+
   return (
     <div className="history-detail">
       <div className="history-detail__header">
         <button type="button" onClick={onBack}>
           ← Tillbaka
         </button>
-        <button type="button" className="history-detail__delete" onClick={handleDelete}>
-          Radera
-        </button>
+        <div className="history-detail__header-actions">
+          <button type="button" onClick={() => setEditing((current) => !current)}>
+            {editing ? 'Klar' : 'Redigera slag'}
+          </button>
+          <button type="button" className="history-detail__delete" onClick={handleDelete}>
+            Radera
+          </button>
+        </div>
       </div>
+      {editing && <p className="history-detail__edit-hint">Ändra ett slag nedan - poäng och resultat räknas om direkt.</p>}
 
       <h2>
         {course.club} – {course.name}
@@ -138,16 +153,24 @@ export function HistoryDetail({ roundId, onBack }: HistoryDetailProps) {
               const outSum = playerStrokesSum(player.playerId, front);
               const inSum = playerStrokesSum(player.playerId, back);
               const total = outSum != null && inSum != null ? outSum + inSum : null;
+              const renderStrokeCell = (h: number) => {
+                const strokes = round.holeScores[h - 1]?.strokesByPlayer[player.playerId] ?? null;
+                if (!editing) return strokes ?? '–';
+                return (
+                  <input
+                    type="number"
+                    className="history-detail__stroke-input"
+                    value={strokes ?? ''}
+                    onChange={(e) => handleStrokeChange(player.playerId, h, e.target.value)}
+                  />
+                );
+              };
               return (
                 <tr key={player.playerId}>
                   <th scope="row">{player.name}</th>
-                  {front.map((h) => (
-                    <td key={h}>{round.holeScores[h - 1]?.strokesByPlayer[player.playerId] ?? '–'}</td>
-                  ))}
+                  {front.map((h) => <td key={h}>{renderStrokeCell(h)}</td>)}
                   <td className="history-detail__summary-col">{outSum ?? '–'}</td>
-                  {back.map((h) => (
-                    <td key={h}>{round.holeScores[h - 1]?.strokesByPlayer[player.playerId] ?? '–'}</td>
-                  ))}
+                  {back.map((h) => <td key={h}>{renderStrokeCell(h)}</td>)}
                   <td className="history-detail__summary-col">{inSum ?? '–'}</td>
                   <td className="history-detail__summary-col">{total ?? '–'}</td>
                 </tr>

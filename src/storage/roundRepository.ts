@@ -21,3 +21,14 @@ export function completeRound(storage: AppStorage, round: Round): AppStorage {
 export function deleteRoundFromHistory(storage: AppStorage, roundId: string): AppStorage {
   return { ...storage, roundsHistory: storage.roundsHistory.filter((round) => round.id !== roundId) };
 }
+
+export function updateRoundInHistory(
+  storage: AppStorage,
+  roundId: string,
+  updater: (round: Round) => Round,
+): AppStorage {
+  return {
+    ...storage,
+    roundsHistory: storage.roundsHistory.map((round) => (round.id === roundId ? updater(round) : round)),
+  };
+}

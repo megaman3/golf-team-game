@@ -3,7 +3,13 @@ import { createDefaultStorage } from './schema';
 import { upsertPlayer, deletePlayer } from './playerRepository';
 import { upsertCourse, deleteCourse } from './courseRepository';
 import { getFormatSettings, setFormatSettings } from './settingsRepository';
-import { saveInProgressRound, discardInProgressRound, completeRound, deleteRoundFromHistory } from './roundRepository';
+import {
+  saveInProgressRound,
+  discardInProgressRound,
+  completeRound,
+  deleteRoundFromHistory,
+  updateRoundInHistory,
+} from './roundRepository';
 import type { Round } from '../domain/types';
 
 const round: Round = {
@@ -78,5 +84,16 @@ describe('roundRepository', () => {
     storage = completeRound(storage, round);
     storage = deleteRoundFromHistory(storage, round.id);
     expect(storage.roundsHistory).toEqual([]);
+  });
+
+  it('updates a round already saved in history, leaving other rounds untouched', () => {
+    let storage = createDefaultStorage();
+    storage = completeRound(storage, round);
+    storage = completeRound(storage, { ...round, id: 'r2' });
+
+    storage = updateRoundInHistory(storage, 'r1', (r) => ({ ...r, scratch: true }));
+
+    expect(storage.roundsHistory.find((r) => r.id === 'r1')?.scratch).toBe(true);
+    expect(storage.roundsHistory.find((r) => r.id === 'r2')?.scratch).toBe(false);
   });
 });

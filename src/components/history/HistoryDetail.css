@@ -19,9 +19,28 @@
   cursor: pointer;
 }
 
+.history-detail__header-actions {
+  display: flex;
+  gap: 8px;
+}
+
 .history-detail__delete {
   color: #b3261e;
   border-color: #b3261e;
+}
+
+.history-detail__edit-hint {
+  margin: 0;
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.history-detail__stroke-input {
+  width: 32px;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  text-align: center;
+  font-size: 13px;
 }
 
 .history-detail h2 {
