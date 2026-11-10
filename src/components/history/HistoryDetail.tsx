@@ -49,6 +49,9 @@ export function HistoryDetail({ roundId, onBack }: HistoryDetailProps) {
   const pointsForHoles = (team: TeamId, holeNumbers: number[]): number =>
     sum(holeNumbers.map((h) => result.holeResults[h - 1]?.pointsByTeam?.[team] ?? 0));
 
+  const playerPointsForHoles = (playerId: string, holeNumbers: number[]): number =>
+    sum(holeNumbers.map((h) => result.holeResults[h - 1]?.pointsByPlayer?.[playerId] ?? 0));
+
   const handleDelete = () => {
     const confirmed = window.confirm('Radera den här rundan från historiken? Det går inte att ångra.');
     if (!confirmed) return;
@@ -149,7 +152,7 @@ export function HistoryDetail({ roundId, onBack }: HistoryDetailProps) {
                 </tr>
               );
             })}
-            {format.usesTeams && (
+            {format.usesTeams ? (
               <>
                 <tr className="history-detail__points-row">
                   <th scope="row">Poäng A</th>
@@ -176,6 +179,21 @@ export function HistoryDetail({ roundId, onBack }: HistoryDetailProps) {
                   <td className="history-detail__summary-col">{pointsForHoles('B', holes)}</td>
                 </tr>
               </>
+            ) : (
+              round.players.map((player) => (
+                <tr key={`points-${player.playerId}`} className="history-detail__points-row">
+                  <th scope="row">Poäng {player.name}</th>
+                  {front.map((h) => (
+                    <td key={h}>{result.holeResults[h - 1]?.pointsByPlayer?.[player.playerId] ?? '–'}</td>
+                  ))}
+                  <td className="history-detail__summary-col">{playerPointsForHoles(player.playerId, front)}</td>
+                  {back.map((h) => (
+                    <td key={h}>{result.holeResults[h - 1]?.pointsByPlayer?.[player.playerId] ?? '–'}</td>
+                  ))}
+                  <td className="history-detail__summary-col">{playerPointsForHoles(player.playerId, back)}</td>
+                  <td className="history-detail__summary-col">{playerPointsForHoles(player.playerId, holes)}</td>
+                </tr>
+              ))
             )}
           </tbody>
         </table>
