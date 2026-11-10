@@ -1,8 +1,11 @@
 # Golf-poängräknare
 
+**Live:** [megaman3.github.io/golf-team-game](https://megaman3.github.io/golf-team-game/)
+
 En mobilanpassad webbapp (PWA) för att räkna poäng när man spelar golf med
 kompisar. Data sparas lokalt i webbläsaren — ingen inloggning, inget konto,
 ingen server. Appen fungerar även med dålig eller ingen täckning på banan.
+Öppna länken ovan på mobilen och lägg till den på hemskärmen.
 
 ## Funktioner
 
@@ -21,8 +24,8 @@ ingen server. Appen fungerar även med dålig eller ingen täckning på banan.
 - Bandata för Barsebäck (Ocean, Pine) och The National (Links, Lakes) finns
   inlagd, och det går att lägga till fler banor i `src/data/courses.json`.
 
-Fler spelformer (t.ex. Köpenhamare) och GitHub Pages-publicering är planerat
-men inte klart än — se `docs/architecture.md` för hela planen.
+Fler spelformer (t.ex. Köpenhamare) är planerat men inte byggt än — se
+`docs/architecture.md` för hela planen.
 
 ## Teknik
 
@@ -42,6 +45,12 @@ npm run build     # bygg produktionsversionen till dist/
 npm run preview   # servera det byggda resultatet lokalt, inklusive PWA/offline-stöd
 npm run lint      # kör linter (oxlint)
 ```
+
+## Publicera en ny version
+
+Varje push till `main` bygger och publicerar appen automatiskt till GitHub
+Pages via `.github/workflows/deploy.yml` — inget manuellt steg behövs.
+Status för senaste publiceringen syns under repots **Actions**-flik.
 
 ## Mer information
 
