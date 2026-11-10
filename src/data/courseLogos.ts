@@ -19,6 +19,10 @@ const falsterboLogo = firstMatch(
   import.meta.glob('/src/pictures/Falsterbo/logo_*.{png,jpg,jpeg}', { eager: true, import: 'default' }),
 );
 
+const lundsAkademiskaLogo = firstMatch(
+  import.meta.glob('/src/pictures/LundsAkademiska/logo_*.{png,jpg,jpeg}', { eager: true, import: 'default' }),
+);
+
 const COURSE_LOGOS: Record<string, string | undefined> = {
   'barseback-ocean': barsebackLogo,
   'barseback-pine': barsebackLogo,
@@ -31,6 +35,7 @@ const COURSE_LOGOS: Record<string, string | undefined> = {
   'orestad-bla-rod': orestadLogo,
   'orestad-bla-gul': orestadLogo,
   falsterbo: falsterboLogo,
+  'lunds-akademiska': lundsAkademiskaLogo,
 };
 
 export function getCourseLogo(courseId: string): string | null {
