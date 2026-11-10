@@ -14,6 +14,9 @@ ingen server. Appen fungerar även med dålig eller ingen täckning på banan.
   redovisas i klassisk matchspelsnotation ("Lag A vinner, 3 och 2").
 - **Köpenhamare (3 spelare):** 6 poäng per hål fördelat 4-2-0 efter
   nettoresultat, med rätt delningsregler vid oavgjort (4-1-1, 3-3-0, 2-2-2).
+- **Poängbogey/Stableford (1–4 spelare, valfritt antal):** 2 poäng för netto
+  par, +1 per slag bättre, -1 per slag sämre (lägst 0) - helt oberoende per
+  spelare, går lika bra att spela själv som i grupp.
 - Spelare kan spela från **olika tees** i samma runda; handicapslag räknas
   utifrån spelarens eget handicap, tee och banans hålindex (och slope/course
   rating när de är ifyllda).
