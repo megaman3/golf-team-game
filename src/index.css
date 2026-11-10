@@ -7,6 +7,13 @@
   --color-primary: #1f6f43;
   --color-primary-contrast: #ffffff;
 
+  /* Categorical chart palette (validated order - see dataviz skill) */
+  --chart-series-1: #2a78d6;
+  --chart-series-2: #eb6834;
+  --chart-series-3: #1baf7a;
+  --chart-grid: #e1e0d9;
+  --chart-axis: #c3c2b7;
+
   font: 16px/1.4 system-ui, 'Segoe UI', Roboto, sans-serif;
   color-scheme: light dark;
   color: var(--color-text);
@@ -22,6 +29,12 @@
     --color-border: #2a332a;
     --color-primary: #3fae72;
     --color-primary-contrast: #0a1a0e;
+
+    --chart-series-1: #3987e5;
+    --chart-series-2: #d95926;
+    --chart-series-3: #199e70;
+    --chart-grid: #2c2c2a;
+    --chart-axis: #383835;
   }
 }
 

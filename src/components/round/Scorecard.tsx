@@ -1,5 +1,8 @@
 import { useStorage } from '../../StorageContext';
 import { setCurrentHole } from '../../domain/roundEditing';
+import { computeRoundResult } from '../../engine/roundResult';
+import { getGameFormat } from '../../engine/formats/registry';
+import { RoundCharts } from './RoundCharts';
 import './Scorecard.css';
 
 interface ScorecardProps {
@@ -19,6 +22,8 @@ export function Scorecard({ onSelectHole }: ScorecardProps) {
     return <p>Kunde inte hitta bana för den pågående rundan.</p>;
   }
 
+  const format = getGameFormat(round.formatId);
+  const result = computeRoundResult(round, course);
   const holes = Array.from({ length: course.holes }, (_, i) => i + 1);
   const splitPoint = Math.ceil(course.holes / 2);
   const front = holes.slice(0, splitPoint);
@@ -152,6 +157,8 @@ export function Scorecard({ onSelectHole }: ScorecardProps) {
           </tbody>
         </table>
       </div>
+
+      <RoundCharts holeResults={result.holeResults} players={round.players} usesTeams={format.usesTeams} />
     </div>
   );
 }

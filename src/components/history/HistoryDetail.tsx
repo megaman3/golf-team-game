@@ -4,6 +4,7 @@ import { computeRoundResult } from '../../engine/roundResult';
 import { getGameFormat } from '../../engine/formats/registry';
 import { deleteRoundFromHistory } from '../../storage/roundRepository';
 import { describeRoundResult, formatRoundDate } from '../round/roundSummary';
+import { RoundCharts } from '../round/RoundCharts';
 import './HistoryDetail.css';
 
 interface HistoryDetailProps {
@@ -198,6 +199,8 @@ export function HistoryDetail({ roundId, onBack }: HistoryDetailProps) {
           </tbody>
         </table>
       </div>
+
+      <RoundCharts holeResults={result.holeResults} players={round.players} usesTeams={format.usesTeams} />
     </div>
   );
 }
