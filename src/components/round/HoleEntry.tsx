@@ -8,6 +8,7 @@ import type { HolePointsResult, RoundTotals } from '../../engine/formats/types';
 import { getGameFormat } from '../../engine/formats/registry';
 import { completeRound, discardInProgressRound } from '../../storage/roundRepository';
 import { CourseBackground } from '../common/CourseBackground';
+import { getCourseBackgroundImage } from '../../data/courseImages';
 import {
   describeMatchStatus,
   describePlayerStandings,
@@ -90,7 +91,7 @@ export function HoleEntry({ onShowScorecard, onFinished, onAborted }: HoleEntryP
   };
 
   return (
-    <CourseBackground courseId={course.id} seed={`${round.id}-${currentHole}`}>
+    <CourseBackground image={getCourseBackgroundImage(course.id, `${round.id}-${currentHole}`)}>
     <div className="hole-entry">
       <div className="hole-entry__top">
         <p className="hole-entry__course">

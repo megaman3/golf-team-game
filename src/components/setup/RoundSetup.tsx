@@ -12,6 +12,8 @@ import { FormatSelect } from './FormatSelect';
 import { PlayerSetup, type DraftPlayer } from './PlayerSetup';
 import { FormatSettingsForm } from './FormatSettingsForm';
 import { pickDefaultTeeId, DEFAULT_HANDICAP } from './defaultTee';
+import { CourseBackground } from '../common/CourseBackground';
+import { getCourseLogo } from '../../data/courseLogos';
 import './RoundSetup.css';
 
 function emptyDraftPlayers(count: number, defaultTeeId: string): DraftPlayer[] {
@@ -124,6 +126,7 @@ export function RoundSetup() {
   }
 
   return (
+    <CourseBackground image={courseId ? getCourseLogo(courseId) : null} fit="contain">
     <div className="round-setup">
       <h2>Ny runda</h2>
       {error && <p className="round-setup__error">{error}</p>}
@@ -158,5 +161,6 @@ export function RoundSetup() {
         Starta runda
       </button>
     </div>
+    </CourseBackground>
   );
 }
