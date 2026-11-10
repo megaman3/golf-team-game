@@ -59,5 +59,89 @@
       { "id": "51", "label": "51", "lengthMeters": 5059, "slope": 119, "courseRating": 67.6 },
       { "id": "48", "label": "48", "lengthMeters": 4840, "slope": 113, "courseRating": 66.2 }
     ]
+  },
+  {
+    "id": "orestad-rod-bla",
+    "club": "Örestads Golfklubb",
+    "name": "Röd & Blå",
+    "holes": 18,
+    "par": [4, 3, 4, 5, 4, 3, 4, 5, 4, 5, 3, 4, 4, 4, 3, 5, 4, 4],
+    "index": [11, 9, 3, 17, 1, 13, 15, 5, 7, 10, 16, 2, 4, 14, 12, 18, 6, 8],
+    "tees": [
+      { "id": "vit", "label": "Vit", "slope": 135, "courseRating": 73.2 },
+      { "id": "gul", "label": "Gul", "slope": 131, "courseRating": 71.4 },
+      { "id": "bla", "label": "Blå", "slope": 126, "courseRating": 68.8 },
+      { "id": "rod", "label": "Röd", "slope": 123, "courseRating": 67.1 }
+    ]
+  },
+  {
+    "id": "orestad-rod-gul",
+    "club": "Örestads Golfklubb",
+    "name": "Röd & Gul",
+    "holes": 18,
+    "par": [4, 3, 4, 5, 4, 3, 4, 5, 4, 4, 3, 4, 3, 4, 5, 4, 4, 4],
+    "index": [11, 9, 3, 17, 1, 13, 15, 5, 7, 10, 14, 12, 2, 4, 18, 6, 16, 8],
+    "tees": [
+      { "id": "vit", "label": "Vit", "lengthMeters": 6088, "slope": 132, "courseRating": 72.9 },
+      { "id": "gul", "label": "Gul", "lengthMeters": 5625, "slope": 128, "courseRating": 70.6 },
+      { "id": "bla", "label": "Blå", "lengthMeters": 5191, "slope": 123, "courseRating": 68.4 },
+      { "id": "rod", "label": "Röd", "lengthMeters": 4757, "slope": 119, "courseRating": 66.3 }
+    ]
+  },
+  {
+    "id": "orestad-gul-bla",
+    "club": "Örestads Golfklubb",
+    "name": "Gul & Blå",
+    "holes": 18,
+    "par": [4, 3, 4, 3, 4, 5, 4, 4, 4, 5, 3, 4, 4, 4, 3, 5, 4, 4],
+    "index": [9, 13, 11, 1, 3, 17, 5, 15, 7, 10, 16, 2, 4, 14, 12, 18, 6, 8],
+    "tees": [
+      { "id": "vit", "label": "Vit", "slope": 126, "courseRating": 72.6 },
+      { "id": "gul", "label": "Gul", "slope": 122, "courseRating": 70.3 },
+      { "id": "bla", "label": "Blå", "slope": 118, "courseRating": 68.3 },
+      { "id": "rod", "label": "Röd", "slope": 113, "courseRating": 66.0 }
+    ]
+  },
+  {
+    "id": "orestad-gul-rod",
+    "club": "Örestads Golfklubb",
+    "name": "Gul & Röd",
+    "holes": 18,
+    "par": [4, 3, 4, 3, 4, 5, 4, 4, 4, 4, 3, 4, 5, 4, 3, 4, 5, 4],
+    "index": [9, 13, 11, 1, 3, 17, 5, 15, 7, 12, 10, 4, 18, 2, 14, 16, 6, 8],
+    "tees": [
+      { "id": "vit", "label": "Vit", "lengthMeters": 6088, "slope": 132, "courseRating": 72.9 },
+      { "id": "gul", "label": "Gul", "lengthMeters": 5625, "slope": 128, "courseRating": 70.6 },
+      { "id": "bla", "label": "Blå", "lengthMeters": 5191, "slope": 123, "courseRating": 68.4 },
+      { "id": "rod", "label": "Röd", "lengthMeters": 4757, "slope": 119, "courseRating": 66.3 }
+    ]
+  },
+  {
+    "id": "orestad-bla-rod",
+    "club": "Örestads Golfklubb",
+    "name": "Blå & Röd",
+    "holes": 18,
+    "par": [5, 3, 4, 4, 4, 3, 5, 4, 4, 4, 3, 4, 5, 4, 3, 4, 5, 4],
+    "index": [9, 15, 1, 3, 13, 11, 17, 5, 7, 12, 10, 4, 18, 2, 14, 16, 6, 8],
+    "tees": [
+      { "id": "vit", "label": "Vit", "slope": 135, "courseRating": 73.2 },
+      { "id": "gul", "label": "Gul", "slope": 131, "courseRating": 71.4 },
+      { "id": "bla", "label": "Blå", "slope": 126, "courseRating": 68.8 },
+      { "id": "rod", "label": "Röd", "slope": 123, "courseRating": 67.1 }
+    ]
+  },
+  {
+    "id": "orestad-bla-gul",
+    "club": "Örestads Golfklubb",
+    "name": "Blå & Gul",
+    "holes": 18,
+    "par": [5, 3, 4, 4, 4, 3, 5, 4, 4, 4, 3, 4, 3, 4, 5, 4, 4, 4],
+    "index": [9, 15, 1, 3, 13, 11, 17, 5, 7, 10, 14, 12, 2, 4, 18, 6, 16, 8],
+    "tees": [
+      { "id": "vit", "label": "Vit", "slope": 126, "courseRating": 72.6 },
+      { "id": "gul", "label": "Gul", "slope": 122, "courseRating": 70.3 },
+      { "id": "bla", "label": "Blå", "slope": 118, "courseRating": 68.3 },
+      { "id": "rod", "label": "Röd", "slope": 113, "courseRating": 66.0 }
+    ]
   }
 ]
