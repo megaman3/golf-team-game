@@ -8,16 +8,8 @@ import { RoundSaved } from './components/round/RoundSaved';
 import { HistoryList } from './components/history/HistoryList';
 import { HistoryDetail } from './components/history/HistoryDetail';
 import { TotalsView } from './components/totals/TotalsView';
+import { SettingsView } from './components/settings/SettingsView';
 import { useStorage } from './StorageContext';
-
-function TabPlaceholder({ title }: { title: string }) {
-  return (
-    <div className="tab-placeholder">
-      <h2>{title}</h2>
-      <p>Kommer snart.</p>
-    </div>
-  );
-}
 
 type RundaView = 'entry' | 'scorecard' | 'saved';
 
@@ -58,7 +50,7 @@ function App() {
         {activeTab === 'runda' && <RundaTab />}
         {activeTab === 'historik' && <HistorikTab />}
         {activeTab === 'total' && <TotalsView />}
-        {activeTab === 'installningar' && <TabPlaceholder title="Inställningar" />}
+        {activeTab === 'installningar' && <SettingsView />}
       </main>
       <TabBar active={activeTab} onChange={setActiveTab} />
     </div>

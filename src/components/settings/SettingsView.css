@@ -1,0 +1,11 @@
+.settings-view {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.settings-view__divider {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 0;
+}
